@@ -9,6 +9,9 @@ import {
 } from "@chakra-ui/react";
 import useExcelRows from "../hooks/useExcelRows.js";
 import { useAppStore } from "../store/useAppStore.js";
+import PLUploadBar from "../components/PLUploadBar.jsx";
+
+
 import Overview from "../components/pld/Overview.jsx";
 
 import COGS from "../components/pld/COGS.jsx";
@@ -82,13 +85,16 @@ export default function PL() {
         P&amp;L Dashboard
       </Text>
 
-      {/* Upload control */}
+
+     <PLUploadBar rows={rows} handleFileUpload={handleFileUpload} onFile={handleFileUpload} />
+
+      {/* Upload control 
       <Box as="fieldset" mb={6} border="none">
         <Text as="legend" fontSize="md" mb={2}>
           Upload Excel&nbsp;file (.xlsx, .xls)
         </Text>
         <Input type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
-      </Box>
+      </Box>*/}
 
       {loading && <Text mb={4}>Loading…</Text>}
 
