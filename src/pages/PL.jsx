@@ -1,4 +1,3 @@
-
 // src/pages/PL.jsx
 import React, { useState, useEffect } from "react";
 import {
@@ -11,12 +10,11 @@ import {
   SkeletonText,
   Stack,
   VStack,
-  HStack
+  HStack,
 } from "@chakra-ui/react";
 import useExcelRows from "../hooks/useExcelRows.js";
 import { useAppStore } from "../store/useAppStore.js";
 import PLUploadBar from "../components/PLUploadBar.jsx";
-
 
 import Overview from "../components/pld/Overview.jsx";
 
@@ -26,15 +24,14 @@ import COGSchart from "../components/pld/COGSchart.jsx";
 import Controllables from "../components/pld/Controllables.jsx";
 import ControllablesChart from "../components/pld/ControllablesChart.jsx";
 
-
 /* ---------- mini table to preview first rows ---------- */
 function DebugTable({ rows, maxRows = 15 }) {
   if (!rows || rows.length === 0) return null;
 
   const header = rows[0];
   const sample = rows.slice(1, maxRows);
-   
-    const itemProps = [
+
+  const itemProps = [
     { circle: "14", height: "220px", lines: 3 },
     { circle: "10", height: "180px", lines: 2 },
     { circle: "16", height: "260px", lines: 4 },
@@ -43,9 +40,7 @@ function DebugTable({ rows, maxRows = 15 }) {
     { circle: "14", height: "240px", lines: 2 },
     { circle: "12", height: "210px", lines: 2 },
     { circle: "16", height: "250px", lines: 4 },
-    ];
- 
-
+  ];
 
   return (
     <Table.Root size="sm" variant="simple" overflowX="auto">
@@ -99,13 +94,12 @@ export default function PL() {
   }, [rows]);
 
   return (
-    <Box p={4}  mx="auto">
-      <Text fontSize="2xl" textAlign="center" mb={4}>
-        P&amp;L Dashboard
-      </Text>
-
-
-     <PLUploadBar rows={rows} handleFileUpload={handleFileUpload} onFile={handleFileUpload} />
+    <Box p={4} mx="auto">
+      <PLUploadBar
+        rows={rows}
+        handleFileUpload={handleFileUpload}
+        onFile={handleFileUpload}
+      />
 
       {/* Upload control 
       <Box as="fieldset" mb={6} border="none">
@@ -115,18 +109,109 @@ export default function PL() {
         <Input type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
       </Box>*/}
 
-      {loading && <Text mb={4}>Loading…</Text>}
+      {loading && (
+        <>
+          <VStack w="full" h="100vh" spacing={6}>
+            <Text fontSize="2xl" textAlign="center" mb={4}>
+              Upload your .xlsx file
+            </Text>
+            <HStack w="full" spacing={6}>
+              <VStack w="full" h="full">
+                <HStack w="full">
+                  <SkeletonCircle
+                    variant="shine"
+                    css={{
+                      "--start-color": "colors.pink.500",
+                      "--end-color": "colors.orange.500",
+                    }}
+                    size="10"
+                  />
+                  <SkeletonText
+                    variant="shine"
+                    css={{
+                      "--start-color": "colors.pink.500",
+                      "--end-color": "colors.orange.500",
+                    }}
+                    noOfLines={2}
+                    w="full"
+                  />
+                </HStack>
+                <Skeleton h="200px" w="full" />
+              </VStack>
+              <VStack w="full" h="full">
+                <HStack w="full">
+                  <SkeletonCircle
+                    variant="shine"
+                    css={{
+                      "--start-color": "colors.pink.500",
+                      "--end-color": "colors.orange.500",
+                    }}
+                    size="10"
+                  />
+                  <SkeletonText
+                    variant="shine"
+                    css={{
+                      "--start-color": "colors.pink.500",
+                      "--end-color": "colors.orange.500",
+                    }}
+                    noOfLines={2}
+                    w="full"
+                  />
+                </HStack>
+                <Skeleton h="200px" w="full" />
+              </VStack>
+            </HStack>
+            <HStack w="full" spacing={6}>
+              {[...Array(4)].map((_, i) => (
+                <VStack key={i} w="full" h="full">
+                  <HStack w="full">
+                    <SkeletonCircle
+                      variant="shine"
+                      css={{
+                        "--start-color": "colors.pink.500",
+                        "--end-color": "colors.orange.500",
+                      }}
+                      size="10"
+                    />
+                    <SkeletonText
+                      variant="shine"
+                      css={{
+                        "--start-color": "colors.pink.500",
+                        "--end-color": "colors.orange.500",
+                      }}
+                      noOfLines={2}
+                      w="full"
+                    />
+                  </HStack>
+                  <Skeleton
+                    variant="shine"
+                    css={{
+                      "--start-color": "colors.pink.500",
+                      "--end-color": "colors.orange.500",
+                    }}
+                    h="200px"
+                    w="full"
+                  />
+                </VStack>
+              ))}
+            </HStack>
+          </VStack>
+        </>
+      )}
 
       {/* Cards */}
       {rows.length > 0 ? (
         <>
+          <Text fontSize="2xl" textAlign="center" mb={4}>
+            P&amp;L Dashboard
+          </Text>
           <Box mb={6}>
             <Overview values={values} />
           </Box>
-           <Box mb={6}>
+          <Box mb={6}>
             <COGSchart rows={rows} />
           </Box>
-           <Box mb={6}>
+          <Box mb={6}>
             <COGS rows={rows} />
           </Box>
           <Box mb={6}>
@@ -136,42 +221,39 @@ export default function PL() {
             <ControllablesChart rows={rows} />
           </Box>
         </>
-      ): (
-        
-<VStack w="full" h="100vh" spacing={6}>
-  <HStack w="full" spacing={6}>
-      <VStack  w="full" h="full">
-        <HStack w="full">
-          <SkeletonCircle size="10" />
-          <SkeletonText noOfLines={2} w="full" />
-        </HStack>
-        <Skeleton h="200px" w="full" />
-      </VStack>
-      <VStack  w="full" h="full">
-        <HStack w="full">
-          <SkeletonCircle size="10" />
-          <SkeletonText noOfLines={2} w="full" />
-        </HStack>
-        <Skeleton h="200px" w="full" />
-      </VStack>
-  </HStack>
-  <HStack w="full" spacing={6}>
-    {[...Array(4)].map((_, i) => (
-      <VStack key={i} w="full" h="full">
-        <HStack w="full">
-          <SkeletonCircle size="10" />
-          <SkeletonText noOfLines={2} w="full" />
-        </HStack>
-        <Skeleton h="200px" w="full" />
-      </VStack>
-    ))}
-  </HStack>
-</VStack>
-
-
-
-
-
+      ) : (
+        <VStack w="full" h="100vh" spacing={6}>
+          <Text fontSize="2xl" textAlign="center" mb={4}>
+            Upload your .xlsx file
+          </Text>
+          <HStack w="full" spacing={6}>
+            <VStack w="full" h="full">
+              <HStack w="full">
+                <SkeletonCircle size="10" />
+                <SkeletonText noOfLines={2} w="full" />
+              </HStack>
+              <Skeleton h="200px" w="full" />
+            </VStack>
+            <VStack w="full" h="full">
+              <HStack w="full">
+                <SkeletonCircle size="10" />
+                <SkeletonText noOfLines={2} w="full" />
+              </HStack>
+              <Skeleton h="200px" w="full" />
+            </VStack>
+          </HStack>
+          <HStack w="full" spacing={6}>
+            {[...Array(4)].map((_, i) => (
+              <VStack key={i} w="full" h="full">
+                <HStack w="full">
+                  <SkeletonCircle size="10" />
+                  <SkeletonText noOfLines={2} w="full" />
+                </HStack>
+                <Skeleton h="200px" w="full" />
+              </VStack>
+            ))}
+          </HStack>
+        </VStack>
       )}
     </Box>
   );

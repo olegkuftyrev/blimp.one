@@ -1,1 +1,1 @@
-export default function ControllablesChart() { return <div>IDP page</div>; }
+export default function ControllablesChart() { return <div>more is coming...</div>; }
