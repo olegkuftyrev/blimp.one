@@ -7,7 +7,7 @@ import FocusStep from "./pages/IDP/FocusStep";
 import CompetencyQuestions from "./pages/IDP/CompetencyQuestions"
 import Results from "./pages/IDP/Results"
 import PL from "./pages/PL";
-import PLstudy from "./pages/plstudy";
+import PLstudy from "./pages/PLstudy"
 import TopNav from "./components/TopNav";
 
 function AppWrapper() {
