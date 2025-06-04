@@ -6,6 +6,12 @@ import {
   Text,
   Input,
   Table,
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+  Stack,
+  VStack,
+  HStack
 } from "@chakra-ui/react";
 import useExcelRows from "../hooks/useExcelRows.js";
 import { useAppStore } from "../store/useAppStore.js";
@@ -27,6 +33,19 @@ function DebugTable({ rows, maxRows = 15 }) {
 
   const header = rows[0];
   const sample = rows.slice(1, maxRows);
+   
+    const itemProps = [
+    { circle: "14", height: "220px", lines: 3 },
+    { circle: "10", height: "180px", lines: 2 },
+    { circle: "16", height: "260px", lines: 4 },
+    { circle: "12", height: "200px", lines: 1 },
+    { circle: "10", height: "190px", lines: 3 },
+    { circle: "14", height: "240px", lines: 2 },
+    { circle: "12", height: "210px", lines: 2 },
+    { circle: "16", height: "250px", lines: 4 },
+    ];
+ 
+
 
   return (
     <Table.Root size="sm" variant="simple" overflowX="auto">
@@ -99,7 +118,7 @@ export default function PL() {
       {loading && <Text mb={4}>Loading…</Text>}
 
       {/* Cards */}
-      {rows.length > 0 && (
+      {rows.length > 0 ? (
         <>
           <Box mb={6}>
             <Overview values={values} />
@@ -117,6 +136,42 @@ export default function PL() {
             <ControllablesChart rows={rows} />
           </Box>
         </>
+      ): (
+        
+<VStack w="full" h="100vh" spacing={6}>
+  <HStack w="full" spacing={6}>
+      <VStack  w="full" h="full">
+        <HStack w="full">
+          <SkeletonCircle size="10" />
+          <SkeletonText noOfLines={2} w="full" />
+        </HStack>
+        <Skeleton h="200px" w="full" />
+      </VStack>
+      <VStack  w="full" h="full">
+        <HStack w="full">
+          <SkeletonCircle size="10" />
+          <SkeletonText noOfLines={2} w="full" />
+        </HStack>
+        <Skeleton h="200px" w="full" />
+      </VStack>
+  </HStack>
+  <HStack w="full" spacing={6}>
+    {[...Array(4)].map((_, i) => (
+      <VStack key={i} w="full" h="full">
+        <HStack w="full">
+          <SkeletonCircle size="10" />
+          <SkeletonText noOfLines={2} w="full" />
+        </HStack>
+        <Skeleton h="200px" w="full" />
+      </VStack>
+    ))}
+  </HStack>
+</VStack>
+
+
+
+
+
       )}
     </Box>
   );
