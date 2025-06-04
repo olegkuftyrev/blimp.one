@@ -13,6 +13,8 @@ import {
 import { useAppStore } from "../../store/useAppStore.js";
 import { roles } from "../../data/roles.js";
 import { useState, useEffect } from "react";
+import ActionNav from "../../components/ActionNav.jsx"
+
 
 export default function FocusStep() {
   const navigate = useNavigate();
@@ -195,18 +197,16 @@ export default function FocusStep() {
           {renderMentorshipCard()}
 
           <HStack justify="space-between">
-            <Button onClick={() => navigate("/idp")} colorScheme="gray">
-              Back
-            </Button>
-            <Button
-              onClick={handleContinue}
-              isDisabled={!anySelected}
-              bg={!anySelected ? "gray.400" : "teal.500"}
-              color="white"
-              _hover={!anySelected ? {} : { bg: "teal.600" }}
-            >
-              Continue
-            </Button>
+           {anySelected && (
+                <ActionNav
+                    open={true}
+                    showBack={true}
+                    showNext={true}
+                    onBack={() => navigate("/idp")}
+                    onNext={handleContinue}
+                    isNextDisabled={false}
+                />
+                )}
           </HStack>
 
           {/* Debug: показываем содержимое focusSkills */}

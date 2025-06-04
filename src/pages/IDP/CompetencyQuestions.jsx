@@ -12,6 +12,8 @@ import {
 import { useAppStore } from "../../store/useAppStore.js";
 import { roles } from "../../data/roles.js";
 import { useState, useEffect } from "react";
+import ActionNav from "../../components/ActionNav.jsx"
+
 
 export default function CompetencyQuestions() {
   const navigate = useNavigate();
@@ -139,26 +141,16 @@ export default function CompetencyQuestions() {
               );
             })}
 
-            <HStack justify="space-between" mt={6}>
-              <Button onClick={() => navigate("/idp/focus")} colorScheme="gray">
-                Back
-              </Button>
-              <Button
-                onClick={handleSubmit}
-                isDisabled={!competencies.every(isCompAnswered)}
-                bg={
-                  !competencies.every(isCompAnswered) ? "gray.400" : "teal.500"
-                }
-                color="white"
-                _hover={
-                  !competencies.every(isCompAnswered)
-                    ? {}
-                    : { bg: "teal.600" }
-                }
-              >
-                Continue
-              </Button>
-            </HStack>
+                        {competencies.every(isCompAnswered) && (
+                            <ActionNav
+                                open={true}
+                                showBack={true}
+                                showNext={true}
+                                onBack={() => navigate("/idp/focus")}
+                                onNext={handleSubmit}
+                                isNextDisabled={false}
+                            />
+                            )}
           </Stack>
         ) : (
           <Text textAlign="center" color="red.500">

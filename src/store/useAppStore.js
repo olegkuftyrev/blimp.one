@@ -2,44 +2,51 @@
 import { create } from "zustand";
 
 export const useAppStore = create((set, get) => ({
-  // ----- IDP flow -----
+  /* ───────────── IDP FLOW ───────────── */
   jobTitleId: null,
   focusAreaIds: [],
 
   setJobTitle: (id) => set({ jobTitleId: id }),
   toggleFocusArea: (id) =>
-    set((state) => {
-      const exists = state.focusAreaIds.includes(id);
-      return {
-        focusAreaIds: exists
-          ? state.focusAreaIds.filter((x) => x !== id)
-          : [...state.focusAreaIds, id],
-      };
-    }),
-
-  currentStep: 0,
-  nextStep: () =>
-    set((state) => {
-      const max = 1;
-      return { currentStep: Math.min(state.currentStep + 1, max) };
-    }),
-  prevStep: () =>
     set((state) => ({
-      currentStep: Math.max(state.currentStep - 1, 0),
+      focusAreaIds: state.focusAreaIds.includes(id)
+        ? state.focusAreaIds.filter((x) => x !== id)
+        : [...state.focusAreaIds, id],
     })),
 
+  /* шаги внутри IDP */
+  currentStep: 0,
+  nextStep: () =>
+    set((s) => ({ currentStep: Math.min(s.currentStep + 1, 1) })),
+  prevStep: () =>
+    set((s) => ({ currentStep: Math.max(s.currentStep - 1, 0) })),
+
+  /* результаты само-оценки */
   competencyScores: {},
   setCompetencyScores: (scores) => set({ competencyScores: scores }),
 
-  // Добавляем булев флаг для Competencies
+  /* выбранные карточки Focus */
   focusSkills: {
     competency: false,
     study: false,
     practice: false,
     mentorship: false,
   },
-  setFocusSkill: (skillType, value) =>
-    set((state) => ({
-      focusSkills: { ...state.focusSkills, [skillType]: value },
+  setFocusSkill: (skill, value) =>
+    set((s) => ({
+      focusSkills: { ...s.focusSkills, [skill]: value },
     })),
+
+  /* ───────────── P&L DASHBOARD ───────────── */
+  /** «Сырые» строки Excel (sheet_to_json range) */
+  plRows: [],
+  /** Объект «ключ → Actuals» (быстрый доступ к метрикам) */
+  plValues: {},
+
+  /**
+   * Сохраняем данные Excel сразу в оба формата
+   * @param {array[]} rows  — массив строк
+   * @param {object}  values — объект «ключ → значение»
+   */
+  setPlData: (rows, values) => set({ plRows: rows, plValues: values }),
 }));

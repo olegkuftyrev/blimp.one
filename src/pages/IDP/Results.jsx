@@ -13,6 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { useAppStore } from "../../store/useAppStore.js";
 import { roles } from "../../data/roles.js";
+import ActionNav from "../../components/ActionNav.jsx"
+
 
 export default function Results() {
   const navigate = useNavigate();
@@ -168,12 +170,16 @@ export default function Results() {
 
           {/* Buttons */}
           <HStack justify="space-between">
-            <Button colorScheme="gray" onClick={() => navigate("/idp/focus")}>
-              Back
-            </Button>
-            <Button colorScheme="teal" onClick={handleStartOver}>
-              Start Over
-            </Button>
+            <ActionNav
+              open={true}
+              showBack={true}
+              showNext={true}
+              backLabel="Back"
+              nextLabel="Start Over"
+              onBack={() => navigate("/idp/focus")}
+              onNext={handleStartOver}
+              isNextDisabled={false}
+            />
           </HStack>
         </Stack>
       </Box>

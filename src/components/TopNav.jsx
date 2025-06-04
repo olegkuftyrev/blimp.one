@@ -1,7 +1,7 @@
 // src/components/TopNav.jsx
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { Flex, Box, Link, Button, Spacer, Icon } from "@chakra-ui/react";
-import { HiHeart } from "react-icons/hi";
+import { GiShipWheel } from "react-icons/gi";
 
 export default function TopNav() {
   const location = useLocation();
@@ -25,7 +25,7 @@ export default function TopNav() {
     >
       <Box display="flex" alignItems="center">
         <Icon size="lg" color="pink.700" mr={2}>
-          <HiHeart />
+          <GiShipWheel/>
         </Icon>
         <Link as={RouterLink} to="/" fontWeight="bold">
           Home

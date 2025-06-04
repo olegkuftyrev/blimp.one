@@ -14,6 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { useAppStore } from "../../store/useAppStore.js";
 import { roles } from "../../data/roles.js";
+import ActionNav from "../../components/ActionNav.jsx"
+
 
 export default function JobTitleStep() {
   const navigate = useNavigate();
@@ -131,17 +133,28 @@ export default function JobTitleStep() {
                 </Accordion.Root>
               </Box>
             )}
+                        {/* Кнопка Continue 
+                        <Button
+                        onClick={handleContinue}
+                        isDisabled={isDisabled}
+                        bg={isDisabled ? "gray.400" : undefined}
+                        color="white"
+                        _hover={isDisabled ? {} : undefined}
+                        >
+                        {isDisabled ? "Disabled" : "Continue"}
+                        </Button>*/}
+           
 
-            {/* Кнопка Continue */}
-            <Button
-              onClick={handleContinue}
-              isDisabled={isDisabled}
-              bg={isDisabled ? "gray.400" : undefined}
-              color="white"
-              _hover={isDisabled ? {} : undefined}
-            >
-              {isDisabled ? "Disabled" : "Continue"}
-            </Button>
+            {!isDisabled && (
+  <ActionNav
+    open={true}
+    showBack={false}
+    showNext={true}
+    onNext={handleContinue}
+    isNextDisabled={false} // Можно вообще не передавать
+  />
+)}
+
           </Stack>
         </Box>
       </Flex>

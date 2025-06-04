@@ -1,9 +1,18 @@
-// src/components/pld/Overview.jsx
+// src/components/pld/Knows.jsx
 import React from "react";
-import { Flex, Box, Text } from "@chakra-ui/react";
+import {
+  Box,
+  SimpleGrid,
+  Text,
+  Heading,
+  Badge,
+  VStack,
+} from "@chakra-ui/react";
 import { safe } from "../../utils/calcUtils.js";
 
-export default function Overview({ values }) {
+export default function Knows({ values }) {
+  if (!values || Object.keys(values).length === 0) return null;
+
   // Base metrics
   const checkAvg = safe(values["Check Avg - Net"]);
   const netSales = safe(values["Net Sales"]);
@@ -20,18 +29,17 @@ export default function Overview({ values }) {
     "Afternoon %": safe(values["Afternoon %"]),
     "Evening %": safe(values["Evening %"]),
   };
-  // Determine busiest
   const busiestEntry = Object.entries(dayparts).reduce(
     (max, cur) => (cur[1] > max[1] ? cur : max),
     ["", -Infinity]
   );
   const busiestLabel = busiestEntry[0];
 
-  // OLO%
+  // OLO %
   const oloPercent =
     netSales > 0 ? ((thirdParty + pandaDigital) / netSales) * 100 : 0;
 
-  // COGS% and Labor%
+  // COGS % and Labor %
   const cogsPercent =
     netSales > 0 ? (safe(values["Cost of Goods Sold"]) / netSales) * 100 : 0;
   const laborPercent =
@@ -68,122 +76,105 @@ export default function Overview({ values }) {
   const maintDiff = maintAct - maintPri;
   const maintPct = maintPri ? (maintDiff / maintPri) * 100 : 0;
 
-  // Build metrics list
+  // Build metrics array
   const metrics = [
     // Daypart %
     ...Object.entries(dayparts).map(([label, val]) => ({
       label,
       value: `${val.toFixed(2)}%`,
-      highlight: label === busiestLabel,
+      isBusiest: label === busiestLabel,
     })),
-    {
-      label: "Actual Net Sales",
-      value: `$${netSales.toLocaleString()}`,
-      highlight: false,
-    },
-    {
-      label: "Check Average",
-      value: `$${checkAvg.toFixed(2)}`,
-      highlight: false,
-    },
-    {
-      label: "Total Transactions",
-      value: `${transactions}`,
-      highlight: false,
-    },
-    {
-      label: "OLO %",
-      value: `${oloPercent.toFixed(2)}%`,
-      highlight: false,
-    },
+    { label: "Actual Net Sales", value: `$${netSales.toLocaleString()}` },
+    { label: "Check Average", value: `$${checkAvg.toFixed(2)}` },
+    { label: "Total Transactions", value: `${transactions}` },
+    { label: "OLO %", value: `${oloPercent.toFixed(2)}%` },
     {
       label: "COGS %",
       value: `${cogsPercent.toFixed(2)}%`,
-      flag: cogsPercent > 30,
-      highlight: false,
+      color: cogsPercent > 30 ? "red.500" : "green.500",
     },
     {
       label: "Labor %",
       value: `${laborPercent.toFixed(2)}%`,
-      flag: laborPercent > 30,
-      highlight: false,
+      color: laborPercent > 30 ? "red.500" : "green.500",
     },
-    { label: "Overtime Hours", value: `${overtimeHrs}`, highlight: false },
-    {
-      label: "Average Hourly Wage",
-      value: `$${hourlyWage.toFixed(2)}`,
-      highlight: false,
-    },
+    { label: "Overtime Hours", value: `${overtimeHrs}` },
+    { label: "Average Hourly Wage", value: `$${hourlyWage.toFixed(2)}` },
     {
       label: "Prime Cost",
       value: `${primeCost.toFixed(2)}%`,
-      flag: primeCost > 60,
-      highlight: false,
+      color: primeCost > 60 ? "red.500" : "green.500",
     },
     {
       label: "Rent Total",
       value: `Act: $${rentActual.toLocaleString()}`,
       detail: `Pri: $${rentPrior.toLocaleString()}`,
       delta: `Δ $${rentDiff.toLocaleString()} (${rentPctDiff.toFixed(2)}%)`,
-      highlight: false,
     },
     {
       label: "Repairs",
       value: `Act: $${repairsAct.toLocaleString()}`,
       detail: `Pri: $${repairsPri.toLocaleString()}`,
       delta: `Δ $${repairsDiff.toLocaleString()} (${repairsPct.toFixed(2)}%)`,
-      highlight: false,
     },
     {
       label: "Maintenance",
       value: `Act: $${maintAct.toLocaleString()}`,
       detail: `Pri: $${maintPri.toLocaleString()}`,
       delta: `Δ $${maintDiff.toLocaleString()} (${maintPct.toFixed(2)}%)`,
-      highlight: false,
     },
   ];
 
+
   return (
-    <Flex wrap="wrap" width="100%" p={2}>
-      {metrics.map((m, i) => (
-        <Box key={i} flex={{ base: "100%", md: "50%", lg: "25%" }} p={2}>
+    <Box w="100%">
+      <Heading size="md" mb={4}>
+        Key Metrics
+      </Heading>
+
+      {/* spacing={6} добавляет отступ между карточками */}
+<SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4}>
+        {metrics.map(({ label, value, detail, delta, color, isBusiest }, i) => (
           <Box
-            borderWidth="1px"
-            borderRadius="md"
-            borderColor={m.highlight ? "orange.400" : "gray.200"}
-            p={4}
+            key={i}
             position="relative"
             bg="white"
-            height="100%"
+            borderRadius="md"
+            shadow="sm"
+            border="1px"
+            p={4}
           >
-            <Text fontWeight="bold" mb={1}>
-              {m.label}
-            </Text>
-            <Text
-              fontSize="xl"
-              fontWeight="semibold"
-              color={m.flag ? "red.500" : "gray.800"}
-            >
-              {m.value}
-            </Text>
-            {m.detail && (
-              <Text fontSize="sm" color="gray.600" mt={1}>
-                {m.detail}
-              </Text>
+            {isBusiest && (
+              <Badge
+                position="absolute"
+                top="4px"
+                right="4px"
+                colorScheme="blackAlpha"
+              >
+                Busiest Time
+              </Badge>
             )}
-            {m.delta && (
-              <Text fontSize="sm" color="gray.600" mt={1}>
-                {m.delta}
+            <VStack align="start" spacing={1}>
+              <Text fontSize="sm" color="gray.500">
+                {label}
               </Text>
-            )}
-            {m.flag && (
-              <Text fontSize="sm" color="red.500" mt={1}>
-                ⚠️
+              <Text fontWeight="bold" color={color || "inherit"}>
+                {value}
               </Text>
-            )}
+              {detail && (
+                <Text fontSize="xs" color="gray.500">
+                  {detail}
+                </Text>
+              )}
+              {delta && (
+                <Text fontSize="xs" color="gray.700">
+                  {delta}
+                </Text>
+              )}
+            </VStack>
           </Box>
-        </Box>
-      ))}
-    </Flex>
+        ))}
+      </SimpleGrid>
+    </Box>
   );
 }

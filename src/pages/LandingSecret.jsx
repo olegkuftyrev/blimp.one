@@ -79,14 +79,7 @@ const [clickCount, setClickCount] = useState(0);
       </Box>
 
       {/* Grow Camp 2 — disabled */}
-      <Box
-        bg="gray.300"
-        color="gray.600"
-        pointerEvents="auto" // чтобы Box был кликабелен
-        filter="grayscale(100%)"
-        {...tileStyles}
-        onClick={handleSecretClick}
-      >
+      <Box as={RouterLink} to="/plstudy" bg="orange.600" color="white" {...tileStyles}>
         <VStack spacing={2}>
           <Heading size="sm" textAlign="center">
             P&L Study
