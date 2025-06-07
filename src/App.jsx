@@ -9,7 +9,6 @@ import Results from "./pages/IDP/Results"
 import PL from "./pages/PL";
 import PLstudy from "./pages/PLstudy"
 import TopNav from "./components/TopNav";
-import PayRateTable from "./components/Pay";
 
 function AppWrapper() {
   const location = useLocation();
@@ -26,7 +25,6 @@ function AppWrapper() {
         <Route path="/plstudy" element={<PLstudy />} />
         <Route path="/idp/questions" element={<CompetencyQuestions />} />
         <Route path="/idp/results" element={<Results />} />
-        <Route path ="/pay/" element={<PayRateTable />} />
       </Routes>
     </>
   );

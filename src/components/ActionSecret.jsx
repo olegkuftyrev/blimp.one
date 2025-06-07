@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function ActionSecret() {
   const [value, setValue] = useState("");
-  const isValid = value === "pandaJOA2222";
+  const isValid = value === "2475";
   const navigate = useNavigate(); // импортируем хук
 
   const handleGo = () => {

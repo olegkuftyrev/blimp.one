@@ -93,21 +93,6 @@ export default function Landing() {
         {clickCount >= 3 && <ActionSecret />}
       </Box>
 
-      {/* Placeholder 1 — under development */}
-      <Box as={RouterLink} to="/pay" bg="blue" color="white" {...tileStyles}>
-        <VStack spacing={2}>
-          <Heading size="sm" textAlign="center">
-            Pay 
-          </Heading>
-          <Text fontSize="sm" textAlign="center">
-            Practice tests & Explanations
-          </Text>
-          <Text fontSize="sm" textAlign="center">
-            In development - Coming soon
-          </Text>
-        </VStack>
-        {clickCount >= 3 && <ActionSecret />}
-      </Box>
 
       {/* Placeholder 2 — under development */}
       <Box
