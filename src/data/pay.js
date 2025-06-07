@@ -28,7 +28,7 @@ const pay = {
     },
     {
       name: "Montana Tier 1",
-      stores: [2261, 2874],
+      stores: [2261, 2874, 3698],
       pay: {
         "Counter Help": 19.00,
         "Kitchen Help": 21.00,
