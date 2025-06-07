@@ -4,7 +4,6 @@ import { Link as RouterLink } from "react-router-dom";
 import ActionSecret from "../components/ActionSecret";
 import { useState } from "react";
 
-
 export default function Landing() {
   const tileStyles = {
     display: "flex",
@@ -15,7 +14,7 @@ export default function Landing() {
     _hover: { filter: "brightness(105%)" },
   };
 
-const [clickCount, setClickCount] = useState(0);
+  const [clickCount, setClickCount] = useState(0);
 
   // обработчик клика для disabled box
   function handleSecretClick() {
@@ -23,7 +22,7 @@ const [clickCount, setClickCount] = useState(0);
   }
 
   return (
-    <SimpleGrid columns={2} rows={2} minH="100vh" w="100%" spacing="0">
+    <SimpleGrid columns={2} rows={3} minH="100vh" w="100%" spacing="0">
       {/* IDP */}
       <Box as={RouterLink} to="/idp" bg="#D02C2F" color="white" {...tileStyles}>
         <VStack spacing={2}>
@@ -70,7 +69,7 @@ const [clickCount, setClickCount] = useState(0);
             Grow Camp
           </Heading>
           <Text fontSize="lg" textAlign="center">
-            Training resources - Workshop material       
+            Training resources - Workshop material
           </Text>
           <Text fontSize="lg" textAlign="center">
             Shared Folder - Proton Drive
@@ -85,13 +84,47 @@ const [clickCount, setClickCount] = useState(0);
             P&L Study
           </Heading>
           <Text fontSize="sm" textAlign="center">
-                Practice tests & Explanations
+            Practice tests & Explanations
           </Text>
           <Text fontSize="sm" textAlign="center">
-                    In development - Coming soon
+            In development - Coming soon
           </Text>
         </VStack>
         {clickCount >= 3 && <ActionSecret />}
+      </Box>
+
+      {/* Placeholder 1 — under development */}
+      <Box as={RouterLink} to="/pay" bg="blue" color="white" {...tileStyles}>
+        <VStack spacing={2}>
+          <Heading size="sm" textAlign="center">
+            Pay 
+          </Heading>
+          <Text fontSize="sm" textAlign="center">
+            Practice tests & Explanations
+          </Text>
+          <Text fontSize="sm" textAlign="center">
+            In development - Coming soon
+          </Text>
+        </VStack>
+        {clickCount >= 3 && <ActionSecret />}
+      </Box>
+
+      {/* Placeholder 2 — under development */}
+      <Box
+        bg="gray.300"
+        color="gray.600"
+        filter="grayscale(100%)"
+        pointerEvents="none"
+        {...tileStyles}
+      >
+        <VStack spacing={2}>
+          <Heading size="sm" textAlign="center">
+            Talent Tracker
+          </Heading>
+          <Text fontSize="sm" textAlign="center">
+            Under development
+          </Text>
+        </VStack>
       </Box>
     </SimpleGrid>
   );
