@@ -301,26 +301,27 @@ export default function SMG() {
   ];
 
   return (
-    <Box p={4} mx="auto">
-      <VStack align="stretch" spacing={4}>
+    <Box p={{ base: 2, md: 4 }} mx="auto" maxW="100vw">
+      <VStack align="stretch" spacing={{ base: 3, md: 4 }}>
         <Box as="fieldset" border="none">
-          <Text as="legend" fontSize="md" mb={2}>
+          <Text as="legend" fontSize={{ base: "sm", md: "md" }} mb={2}>
             Upload Excel file (.xlsx) to generate smart report
           </Text>
           <Input
             type="file"
             accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
             onChange={handleFileUpload}
+            size={{ base: "sm", md: "md" }}
           />
           {err && <Text color="red.500" fontSize="sm" mt={2}>{err}</Text>}
         </Box>
 
         {data.length > 0 && (
-          <VStack spacing={6} align="stretch">
-            {/* Summary Table */}
+          <VStack spacing={{ base: 4, md: 6 }} align="stretch">
+            {/* Summary Table - Mobile Optimized */}
             <Box>
               <Text 
-                fontSize="xl" 
+                fontSize={{ base: "lg", md: "xl" }} 
                 fontWeight="bold" 
                 color="gray.700" 
                 mb={3}
@@ -337,79 +338,98 @@ export default function SMG() {
                 rounded="lg"
                 shadow="sm"
                 bg="white"
+                sx={{
+                  '&::-webkit-scrollbar': {
+                    height: '8px',
+                  },
+                  '&::-webkit-scrollbar-track': {
+                    background: 'gray.100',
+                    borderRadius: '4px',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    background: 'gray.400',
+                    borderRadius: '4px',
+                  },
+                }}
               >
-                <Table.Root size="sm" variant="simple">
+                <Table.Root size={{ base: "xs", md: "sm" }} variant="simple">
                   <Table.Header>
                     <Table.Row bg="gray.100" borderBottom="2px" borderColor="gray.300">
                       <Table.ColumnHeader 
-                        py={3} 
-                        px={4} 
-                        fontSize="sm"
+                        py={{ base: 2, md: 3 }}
+                        px={{ base: 2, md: 4 }}
+                        fontSize={{ base: "xs", md: "sm" }}
                         fontWeight="bold"
                         color="gray.800"
                         textAlign="center"
                         borderRight="1px solid"
                         borderColor="gray.300"
+                        minW={{ base: "60px", md: "80px" }}
                       >
                         Area
                       </Table.ColumnHeader>
                       <Table.ColumnHeader 
-                        py={3} 
-                        px={4} 
-                        fontSize="sm"
+                        py={{ base: 2, md: 3 }}
+                        px={{ base: 2, md: 4 }}
+                        fontSize={{ base: "xs", md: "sm" }}
                         fontWeight="bold"
                         color="gray.800"
                         textAlign="center"
                         borderRight="1px solid"
                         borderColor="gray.300"
+                        minW={{ base: "70px", md: "90px" }}
                       >
                         Store Count
                       </Table.ColumnHeader>
                       <Table.ColumnHeader 
-                        py={3} 
-                        px={4} 
-                        fontSize="sm"
+                        py={{ base: 2, md: 3 }}
+                        px={{ base: 2, md: 4 }}
+                        fontSize={{ base: "xs", md: "sm" }}
                         fontWeight="bold"
                         color="gray.800"
                         textAlign="center"
                         borderRight="1px solid"
                         borderColor="gray.300"
+                        minW={{ base: "80px", md: "100px" }}
                       >
                         Meet ToF Target
                       </Table.ColumnHeader>
                       <Table.ColumnHeader 
-                        py={3} 
-                        px={4} 
-                        fontSize="sm"
+                        py={{ base: 2, md: 3 }}
+                        px={{ base: 2, md: 4 }}
+                        fontSize={{ base: "xs", md: "sm" }}
                         fontWeight="bold"
                         color="gray.800"
                         textAlign="center"
                         borderRight="1px solid"
                         borderColor="gray.300"
+                        minW={{ base: "70px", md: "90px" }}
                       >
                         % Meet ToF
                       </Table.ColumnHeader>
                       <Table.ColumnHeader 
-                        py={3} 
-                        px={4} 
-                        fontSize="sm"
+                        py={{ base: 2, md: 3 }}
+                        px={{ base: 2, md: 4 }}
+                        fontSize={{ base: "xs", md: "sm" }}
                         fontWeight="bold"
                         color="gray.800"
                         textAlign="center"
                         borderRight="1px solid"
                         borderColor="gray.300"
+                        minW={{ base: "80px", md: "100px" }}
                       >
                         Meet OSAT Target
                       </Table.ColumnHeader>
                       <Table.ColumnHeader 
-                        py={3} 
-                        px={4} 
-                        fontSize="sm"
+                        py={{ base: 2, md: 3 }}
+                        px={{ base: 2, md: 4 }}
+                        fontSize={{ base: "xs", md: "sm" }}
                         fontWeight="bold"
                         color="gray.800"
                         textAlign="center"
                         borderRight="1px solid"
                         borderColor="gray.300"
+                        minW={{ base: "70px", md: "90px" }}
                       >
                         % Meet OSAT
                       </Table.ColumnHeader>
@@ -429,15 +449,23 @@ export default function SMG() {
                         const meetOSAT = areaData.filter(row => row.osatDifference >= 0).length;
                         const totalStores = areaData.length;
                         
+                        const tofPercent = totalStores > 0 ? (meetToF / totalStores) * 100 : 0;
+                        const osatPercent = totalStores > 0 ? (meetOSAT / totalStores) * 100 : 0;
+                        const averagePerformance = (tofPercent + osatPercent) / 2;
+                        
                         return {
                           areaName,
                           storeCount: totalStores,
                           meetToF,
-                          meetToFPercent: totalStores > 0 ? ((meetToF / totalStores) * 100).toFixed(1) : "0.0",
+                          meetToFPercent: tofPercent.toFixed(1),
                           meetOSAT,
-                          meetOSATPercent: totalStores > 0 ? ((meetOSAT / totalStores) * 100).toFixed(1) : "0.0"
+                          meetOSATPercent: osatPercent.toFixed(1),
+                          averagePerformance
                         };
                       }).filter(Boolean);
+                      
+                      // Sort by average performance (highest to lowest)
+                      summaryData.sort((a, b) => b.averagePerformance - a.averagePerformance);
                       
                       // Calculate totals
                       const totalStores = data.length;
@@ -456,68 +484,70 @@ export default function SMG() {
                       return [...summaryData, totalRow].map((row, index) => (
                         <Table.Row 
                           key={row.areaName}
-                          bg={index % 4 === 0 ? "pink.50" : 
-                              index % 4 === 1 ? "blue.50" : 
-                              index % 4 === 2 ? "purple.50" : 
-                              index % 4 === 3 ? "green.50" : 
-                              row.areaName === "Total" ? "gray.100" : "white"}
+                          bg={row.areaName === "Total" ? "gray.100" : "white"}
                           borderBottom="1px"
                           borderColor="gray.200"
                         >
                           <Table.Cell 
-                            py={3} 
-                            px={4} 
+                            py={{ base: 2, md: 3 }}
+                            px={{ base: 2, md: 4 }}
                             fontWeight="bold"
                             textAlign="center"
                             borderRight="1px solid"
                             borderColor="gray.300"
+                            fontSize={{ base: "xs", md: "sm" }}
                           >
                             {row.areaName}
                           </Table.Cell>
                           <Table.Cell 
-                            py={3} 
-                            px={4} 
+                            py={{ base: 2, md: 3 }}
+                            px={{ base: 2, md: 4 }}
                             textAlign="center"
                             borderRight="1px solid"
                             borderColor="gray.300"
+                            fontSize={{ base: "xs", md: "sm" }}
                           >
                             {row.storeCount}
                           </Table.Cell>
                           <Table.Cell 
-                            py={3} 
-                            px={4} 
+                            py={{ base: 2, md: 3 }}
+                            px={{ base: 2, md: 4 }}
                             textAlign="center"
                             borderRight="1px solid"
                             borderColor="gray.300"
+                            fontSize={{ base: "xs", md: "sm" }}
                           >
                             {row.meetToF}
                           </Table.Cell>
                           <Table.Cell 
-                            py={3} 
-                            px={4} 
+                            py={{ base: 2, md: 3 }}
+                            px={{ base: 2, md: 4 }}
                             textAlign="center"
                             borderRight="1px solid"
                             borderColor="gray.300"
                             fontWeight="bold"
+                            fontSize={{ base: "xs", md: "sm" }}
                           >
                             {row.meetToFPercent}%
                           </Table.Cell>
                           <Table.Cell 
-                            py={3} 
-                            px={4} 
+                            py={{ base: 2, md: 3 }}
+                            px={{ base: 2, md: 4 }}
                             textAlign="center"
                             borderRight="1px solid"
                             borderColor="gray.300"
+                            fontSize={{ base: "xs", md: "sm" }}
                           >
                             {row.meetOSAT}
                           </Table.Cell>
                           <Table.Cell 
-                            py={3} 
-                            px={4} 
+                            py={{ base: 2, md: 3 }}
+                            px={{ base: 2, md: 4 }}
                             textAlign="center"
                             borderRight="1px solid"
                             borderColor="gray.300"
                             fontWeight="bold"
+                            fontSize={{ base: "xs", md: "sm" }}
                           >
                             {row.meetOSATPercent}%
                           </Table.Cell>
@@ -545,7 +575,7 @@ export default function SMG() {
               return (
                 <Box key={areaName}>
                   <Text 
-                    fontSize="xl" 
+                    fontSize={{ base: "lg", md: "xl" }} 
                     fontWeight="bold" 
                     color="blue.700" 
                     mb={3}
@@ -562,21 +592,47 @@ export default function SMG() {
                       rounded="lg"
                       shadow="sm"
                       bg="white"
+                      sx={{
+                        '&::-webkit-scrollbar': {
+                          height: '8px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                          background: 'gray.100',
+                          borderRadius: '4px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          background: 'gray.400',
+                          borderRadius: '4px',
+                        },
+                      }}
                     >
-                      <Table.Root size="sm" variant="simple">
+                      <Table.Root size={{ base: "xs", md: "sm" }} variant="simple">
                         <Table.Header>
                           <Table.Row bg="gray.50" borderBottom="2px" borderColor="gray.200">
                             {smartHeaders.slice(1).map((header, index) => ( // Remove "Area" column
                               <Table.ColumnHeader 
                                 key={index}
-                                py={3}
-                                px={4}
-                                fontSize="sm"
+                                py={{ base: 2, md: 3 }}
+                                px={{ base: 2, md: 4 }}
+                                fontSize={{ base: "xs", md: "sm" }}
                                 fontWeight="semibold"
                                 color="gray.700"
                                 textAlign="center"
                                 borderRight={index < smartHeaders.length - 2 ? "1px solid" : "none"}
                                 borderColor="gray.200"
+                                minW={{ 
+                                  base: index === 0 ? "80px" : 
+                                        index === 1 ? "120px" : 
+                                        index === 2 ? "70px" : 
+                                        index === 3 ? "80px" : 
+                                        index === 4 ? "80px" : 
+                                        index === 5 ? "80px" : 
+                                        index === 6 ? "80px" : 
+                                        index === 7 ? "80px" : 
+                                        index === 8 ? "80px" : 
+                                        index === 9 ? "80px" : "80px",
+                                  md: "auto"
+                                }}
                               >
                                 {header}
                               </Table.ColumnHeader>
@@ -592,12 +648,13 @@ export default function SMG() {
                               borderColor="gray.100"
                             >
                               <Table.Cell 
-                                py={3} 
-                                px={4} 
+                                py={{ base: 2, md: 3 }} 
+                                px={{ base: 2, md: 4 }} 
                                 fontWeight="medium"
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                fontSize={{ base: "xs", md: "sm" }}
                                 bg={(() => {
                                   // Check if store meets both targets
                                   const meetsToF = row.tofDifference >= 0;
@@ -615,93 +672,103 @@ export default function SMG() {
                                 {row.storeNumber}
                               </Table.Cell>
                               <Table.Cell 
-                                py={3} 
-                                px={4} 
+                                py={{ base: 2, md: 3 }} 
+                                px={{ base: 2, md: 4 }} 
                                 fontWeight="medium"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                fontSize={{ base: "xs", md: "sm" }}
                               >
                                 {row.storeName}
                               </Table.Cell>
                               <Table.Cell 
-                                py={3} 
-                                px={4} 
+                                py={{ base: 2, md: 3 }} 
+                                px={{ base: 2, md: 4 }} 
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                fontSize={{ base: "xs", md: "sm" }}
                               >
                                 {row.count}
                               </Table.Cell>
                               <Table.Cell 
-                                py={3} 
-                                px={4} 
+                                py={{ base: 2, md: 3 }} 
+                                px={{ base: 2, md: 4 }} 
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                fontSize={{ base: "xs", md: "sm" }}
                               >
                                 {row.ptdTasteOfFood?.toFixed(1) || ""}
                               </Table.Cell>
                               <Table.Cell 
-                                py={3} 
-                                px={4} 
+                                py={{ base: 2, md: 3 }} 
+                                px={{ base: 2, md: 4 }} 
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                fontSize={{ base: "xs", md: "sm" }}
                               >
                                 {row.tofTarget?.toFixed(1) || ""}
                               </Table.Cell>
                               <Table.Cell 
-                                py={3} 
-                                px={4} 
+                                py={{ base: 2, md: 3 }} 
+                                px={{ base: 2, md: 4 }} 
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                fontSize={{ base: "xs", md: "sm" }}
                               >
                                 {row.tofDifference?.toFixed(1) || ""}
                               </Table.Cell>
                               <Table.Cell 
-                                py={3} 
-                                px={4} 
+                                py={{ base: 2, md: 3 }} 
+                                px={{ base: 2, md: 4 }} 
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                fontSize={{ base: "xs", md: "sm" }}
                                 bg={row.tofSurveysNeeded ? "red.50" : ""}
                               >
                                 {row.tofSurveysNeeded ? row.tofSurveysNeeded : `+${Math.abs(row.tofDifference).toFixed(1)}%`}
                               </Table.Cell>
                               <Table.Cell 
-                                py={3} 
-                                px={4} 
+                                py={{ base: 2, md: 3 }} 
+                                px={{ base: 2, md: 4 }} 
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                fontSize={{ base: "xs", md: "sm" }}
                               >
                                 {row.ptdOsat?.toFixed(1) || ""}
                               </Table.Cell>
                               <Table.Cell 
-                                py={3} 
-                                px={4} 
+                                py={{ base: 2, md: 3 }} 
+                                px={{ base: 2, md: 4 }} 
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                fontSize={{ base: "xs", md: "sm" }}
                               >
                                 {row.osatTarget?.toFixed(1) || ""}
                               </Table.Cell>
                               <Table.Cell 
-                                py={3} 
-                                px={4} 
+                                py={{ base: 2, md: 3 }} 
+                                px={{ base: 2, md: 3 }} 
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                fontSize={{ base: "xs", md: "sm" }}
                               >
                                 {row.osatDifference?.toFixed(1) || ""}
                               </Table.Cell>
                               <Table.Cell 
-                                py={3} 
-                                px={4} 
+                                py={{ base: 2, md: 3 }} 
+                                px={{ base: 2, md: 4 }} 
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                fontSize={{ base: "xs", md: "sm" }}
                                 bg={row.osatSurveysNeeded ? "red.50" : ""}
                               >
                                 {row.osatSurveysNeeded ? row.osatSurveysNeeded : `+${Math.abs(row.osatDifference).toFixed(1)}%`}
