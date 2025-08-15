@@ -551,17 +551,17 @@ export default function SMG() {
                   </Box>
                   
                   {/* Right Column - Performance Insight Cards */}
-                  <Box flex="2" minW="600px">
+                  <Box flex="2" minW={{ base: "100%", lg: "600px" }}>
                     {/* First Row */}
                     <Flex 
-                      direction={{ base: "column", sm: "row" }}
-                      gap={{ base: 2, md: 3 }}
+                      direction={{ base: "column", md: "row" }}
+                      gap={{ base: 3, md: 3 }}
                       w="100%"
                       mb={4}
                       flexWrap="wrap"
                     >
                       {/* Top Performers */}
-                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200" flex="1" minW="200px">
+                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200" flex={{ base: "1", md: "1" }} minW={{ base: "100%", md: "200px" }}>
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="green.500" rounded="full" />
@@ -569,7 +569,7 @@ export default function SMG() {
                               Top Performers
                             </Text>
                           </HStack>
-                          <Text fontSize="xs" color="green.600">
+                          <Text fontSize="xs" color="green.600" textAlign="left">
                             {(() => {
                               const topPerformers = data.filter(row => row.tofDifference >= 0 && row.osatDifference >= 0).length;
                               return `${topPerformers} stores meeting both targets`;
@@ -579,7 +579,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Meet ToF */}
-                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200" flex="1" minW="200px">
+                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200" flex={{ base: "1", md: "1" }} minW={{ base: "100%", md: "200px" }}>
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="green.500" rounded="full" />
@@ -587,7 +587,7 @@ export default function SMG() {
                               Meet ToF
                             </Text>
                           </HStack>
-                          <Text fontSize="xs" color="green.600">
+                          <Text fontSize="xs" color="green.600" textAlign="left">
                             {(() => {
                               const meetToF = data.filter(row => row.tofDifference >= 0).length;
                               return `${meetToF} stores`;
@@ -597,7 +597,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Meet OSAT */}
-                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200" flex="1" minW="200px">
+                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200" flex={{ base: "1", md: "1" }} minW={{ base: "100%", md: "200px" }}>
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="green.500" rounded="full" />
@@ -605,7 +605,7 @@ export default function SMG() {
                               Meet OSAT
                             </Text>
                           </HStack>
-                          <Text fontSize="xs" color="green.600">
+                          <Text fontSize="xs" color="green.600" textAlign="left">
                             {(() => {
                               const meetOSAT = data.filter(row => row.osatDifference >= 0).length;
                               return `${meetOSAT} stores`;
@@ -615,7 +615,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Close to Target */}
-                      <Box bg="orange.50" p={4} rounded="lg" borderWidth="1px" borderColor="orange.200" flex="1" minW="200px">
+                      <Box bg="orange.50" p={4} rounded="lg" borderWidth="1px" borderColor="orange.200" flex={{ base: "1", md: "1" }} minW={{ base: "100%", md: "200px" }}>
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="orange.500" rounded="full" />
@@ -623,7 +623,7 @@ export default function SMG() {
                               Close to Target
                             </Text>
                           </HStack>
-                          <Text fontSize="xs" color="orange.600">
+                          <Text fontSize="xs" color="orange.600" textAlign="left">
                             {(() => {
                               const closeToTarget = data.filter(row => 
                                 (row.tofDifference >= -5 && row.tofDifference < 0) || 
@@ -638,13 +638,13 @@ export default function SMG() {
                     
                     {/* Second Row */}
                     <Flex 
-                      direction={{ base: "column", sm: "row" }}
-                      gap={{ base: 2, md: 3 }}
+                      direction={{ base: "column", md: "row" }}
+                      gap={{ base: 3, md: 3 }}
                       w="100%"
                       flexWrap="wrap"
                     >
                       {/* Needs Attention */}
-                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200" flex="1" minW="200px">
+                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200" flex={{ base: "1", md: "1" }} minW={{ base: "100%", md: "200px" }}>
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="red.500" rounded="full" />
@@ -652,7 +652,7 @@ export default function SMG() {
                               Needs Attention
                             </Text>
                           </HStack>
-                          <Text fontSize="xs" color="red.600">
+                          <Text fontSize="xs" color="red.600" textAlign="left">
                             {(() => {
                               const needsAttention = data.filter(row => row.tofDifference < 0 && row.osatDifference < 0).length;
                               return `${needsAttention} stores missing both targets`;
@@ -662,7 +662,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Didn't meet ToF */}
-                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200" flex="1" minW="200px">
+                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200" flex={{ base: "1", md: "1" }} minW={{ base: "100%", md: "200px" }}>
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="red.500" rounded="full" />
@@ -670,7 +670,7 @@ export default function SMG() {
                               Didn't meet ToF
                             </Text>
                           </HStack>
-                          <Text fontSize="xs" color="red.600">
+                          <Text fontSize="xs" color="red.600" textAlign="left">
                             {(() => {
                               const didntMeetToF = data.filter(row => row.tofDifference < 0).length;
                               return `${didntMeetToF} stores`;
@@ -680,7 +680,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Didn't meet OSAT */}
-                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200" flex="1" minW="200px">
+                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200" flex={{ base: "1", md: "1" }} minW={{ base: "100%", md: "200px" }}>
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="red.500" rounded="full" />
@@ -688,7 +688,7 @@ export default function SMG() {
                               Didn't meet OSAT
                             </Text>
                           </HStack>
-                          <Text fontSize="xs" color="red.600">
+                          <Text fontSize="xs" color="red.600" textAlign="left">
                             {(() => {
                               const didntMeetOSAT = data.filter(row => row.osatDifference < 0).length;
                               return `${didntMeetOSAT} stores`;
@@ -698,7 +698,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Mixed Performance */}
-                      <Box bg="blue.50" p={4} rounded="lg" borderWidth="1px" borderColor="blue.200" flex="1" minW="200px">
+                      <Box bg="blue.50" p={4} rounded="lg" borderWidth="1px" borderColor="blue.200" flex={{ base: "1", md: "1" }} minW={{ base: "100%", md: "200px" }}>
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="blue.500" rounded="full" />
@@ -706,7 +706,7 @@ export default function SMG() {
                               Mixed Performance
                             </Text>
                           </HStack>
-                          <Text fontSize="xs" color="blue.600">
+                          <Text fontSize="xs" color="blue.600" textAlign="left">
                             {(() => {
                               const mixed = data.filter(row => 
                                 (row.tofDifference >= 0 && row.osatDifference < 0) || 
