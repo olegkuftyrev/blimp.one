@@ -9,8 +9,6 @@ import {
   Button,
   Table,
   Text,
-  Accordion,
-  DataList,
 } from "@chakra-ui/react";
 import { useAppStore } from "../../store/useAppStore.js";
 import { roles } from "../../data/roles.js";
@@ -23,22 +21,9 @@ export default function JobTitleStep() {
   const selectedLabel = jobTitleId ?? ""; // empty when nothing selected
   const role = roles.find((r) => r.label === selectedLabel) || null;
 
-  const skills = role?.skills ?? [];
   const comps = role?.competencies ?? [];
 
   const isDisabled = !selectedLabel;
-
-  // Группируем навыки по learningStyle
-  const mentorshipSkills = skills.filter((s) => s.learningStyle === "mentorship");
-  const studySkills = skills.filter((s) => s.learningStyle === "study");
-  const practiceSkills = skills.filter((s) => s.learningStyle === "practice");
-
-  // Порядок категорий: Study → Practice → Mentorship
-  const skillCategories = [
-    { value: "study", title: "Study", items: studySkills },
-    { value: "practice", title: "Practice", items: practiceSkills },
-    { value: "mentorship", title: "Mentorship", items: mentorshipSkills },
-  ].filter((cat) => cat.items.length > 0);
 
   const handleContinue = () => {
     if (!isDisabled) {
@@ -49,14 +34,18 @@ export default function JobTitleStep() {
   return (
     <Flex minH="100vh" direction="column" bg="gray.50" px={4}>
       <Flex flex="1" align="center" justify="center">
-        <Box w="100%" maxW="460px">
+        <Box w="100%" maxW="900px">
           <Heading mb={6} textAlign="center">
             Select Your Job Title
           </Heading>
 
-          <Stack spacing={4}>
-            {/* Селектор: placeholder только когда ничего не выбрано */}
-            <NativeSelect.Root>
+          <Box bg="white" rounded="md" shadow="md" p={6}>
+            {/* Job Title Selection */}
+            <Text fontWeight="bold" mb={4} fontSize="lg">
+              Select Your Job Title
+            </Text>
+            
+            <NativeSelect.Root mb={6}>
               <NativeSelect.Field
                 value={selectedLabel}
                 onChange={(e) => setJobTitle(e.target.value)}
@@ -77,8 +66,8 @@ export default function JobTitleStep() {
 
             {/* Competencies */}
             {role && comps.length > 0 && (
-              <Box bg="white" rounded="md" shadow="md" p={4}>
-                <Text fontWeight="bold" mb={2}>
+              <>
+                <Text fontWeight="bold" mb={3} fontSize="md">
                   Competencies
                 </Text>
                 <Table.Root size="sm" variant="simple" striped interactive>
@@ -90,72 +79,109 @@ export default function JobTitleStep() {
                     ))}
                   </Table.Body>
                 </Table.Root>
-              </Box>
+              </>
             )}
 
-            {/* Skills в виде аккордеона с DataList внутри */}
-            {role && skillCategories.length > 0 && (
-              <Box bg="white" rounded="md" shadow="md" p={4}>
-                <Text fontWeight="bold" mb={2}>
-                  Skills
-                </Text>
-                <Accordion.Root collapsible>
-                  {skillCategories.map((cat) => (
-                    <Accordion.Item key={cat.value} value={cat.value}>
-                      <Accordion.ItemTrigger display="flex" alignItems="center">
-                        <Box flex="1" textAlign="left">
-                          {cat.title}
-                        </Box>
-                        <Accordion.ItemIndicator />
-                      </Accordion.ItemTrigger>
-                      <Accordion.ItemContent>
-                        <Accordion.ItemBody>
-                          <DataList.Root
-                            orientation="horizontal"
-                            divideY="1px"
-                            maxW="100%"
-                          >
-                            {cat.items.map((s) => (
-                              <DataList.Item key={s.id} pt="4">
-                                <DataList.ItemLabel w="140px">
-                                  {s.label}
-                                </DataList.ItemLabel>
-                                <DataList.ItemValue>
-                                  {s.note ?? ""}
-                                </DataList.ItemValue>
-                              </DataList.Item>
-                            ))}
-                          </DataList.Root>
-                        </Accordion.ItemBody>
-                      </Accordion.ItemContent>
-                    </Accordion.Item>
-                  ))}
-                </Accordion.Root>
-              </Box>
-            )}
-                        {/* Кнопка Continue 
-                        <Button
-                        onClick={handleContinue}
-                        isDisabled={isDisabled}
-                        bg={isDisabled ? "gray.400" : undefined}
-                        color="white"
-                        _hover={isDisabled ? {} : undefined}
-                        >
-                        {isDisabled ? "Disabled" : "Continue"}
-                        </Button>*/}
-           
-
+            {/* Action Navigation */}
             {!isDisabled && (
-  <ActionNav
-    open={true}
-    showBack={false}
-    showNext={true}
-    onNext={handleContinue}
-    isNextDisabled={false} // Можно вообще не передавать
-  />
-)}
+              <ActionNav
+                open={true}
+                showBack={false}
+                showNext={true}
+                onNext={handleContinue}
+                isNextDisabled={false}
+              />
+            )}
+          </Box>
 
-          </Stack>
+          {/* Bottom Card - Role Cards */}
+          <Box mt={6} bg="white" rounded="md" shadow="md" p={6} width="100%">
+            <Text fontWeight="bold" mb={4} fontSize="lg" color="gray.700">
+              Role Cards
+            </Text>
+
+            <Stack spacing={6}>
+              {/* Culture Core */}
+              <Box>
+                <Text fontWeight="semibold" mb={3} fontSize="md" color="teal.600">
+                  Culture Core
+                </Text>
+                <Box p={3} bg="teal.50" rounded="md">
+                  <Stack spacing={1}>
+                    <Text fontSize="sm">• Customer Focus</Text>
+                    <Text fontSize="sm">• Decision Quality</Text>
+                    <Text fontSize="sm">• Ensures Accountability</Text>
+                    <Text fontSize="sm">• Values Differences</Text>
+                    <Text fontSize="sm">• Integrity and Trust</Text>
+                  </Stack>
+                </Box>
+              </Box>
+
+              {/* Hourly Associate */}
+              <Box>
+                <Text fontWeight="semibold" mb={3} fontSize="md" color="blue.600">
+                  Hourly Associate
+                </Text>
+                <Box p={3} bg="blue.50" rounded="md">
+                  <Stack spacing={1}>
+                    <Text fontSize="sm">• Action Oriented</Text>
+                    <Text fontSize="sm">• Communicates Effectively</Text>
+                    <Text fontSize="sm">• Customer Focus</Text>
+                    <Text fontSize="sm">• Decision Quality</Text>
+                    <Text fontSize="sm">• Ensures Accountability</Text>
+                    <Text fontSize="sm">• Values Differences</Text>
+                    <Text fontSize="sm">• Integrity and Trust</Text>
+                  </Stack>
+                </Box>
+              </Box>
+
+              {/* AM/Chef, SM/GM, TL */}
+              <Box>
+                <Text fontWeight="semibold" mb={3} fontSize="md" color="green.600">
+                  AM/Chef, SM/GM, TL
+                </Text>
+                <Box p={3} bg="green.50" rounded="md">
+                  <Stack spacing={1}>
+                    <Text fontSize="sm">• Business Insight</Text>
+                    <Text fontSize="sm">• Attracts and Develops Talent</Text>
+                    <Text fontSize="sm">• Being Resilient</Text>
+                    <Text fontSize="sm">• Action Oriented</Text>
+                    <Text fontSize="sm">• Communicates Effectively</Text>
+                    <Text fontSize="sm">• Customer Focus</Text>
+                    <Text fontSize="sm">• Decision Quality</Text>
+                    <Text fontSize="sm">• Ensures Accountability</Text>
+                    <Text fontSize="sm">• Values Differences</Text>
+                    <Text fontSize="sm">• Integrity and Trust</Text>
+                  </Stack>
+                </Box>
+              </Box>
+
+              {/* ACO, RDO */}
+              <Box>
+                <Text fontWeight="semibold" mb={3} fontSize="md" color="red.600">
+                  ACO, RDO
+                </Text>
+                <Box p={3} bg="red.50" rounded="md">
+                  <Stack spacing={1}>
+                    <Text fontSize="sm">• Cultivates Innovation</Text>
+                    <Text fontSize="sm">• Drives Results</Text>
+                    <Text fontSize="sm">• Situational Adaptability</Text>
+                    <Text fontSize="sm">• Courage</Text>
+                    <Text fontSize="sm">• Business Insight</Text>
+                    <Text fontSize="sm">• Attracts and Develops Talent</Text>
+                    <Text fontSize="sm">• Being Resilient</Text>
+                    <Text fontSize="sm">• Action Oriented</Text>
+                    <Text fontSize="sm">• Communicates Effectively</Text>
+                    <Text fontSize="sm">• Customer Focus</Text>
+                    <Text fontSize="sm">• Decision Quality</Text>
+                    <Text fontSize="sm">• Ensures Accountability</Text>
+                    <Text fontSize="sm">• Values Differences</Text>
+                    <Text fontSize="sm">• Integrity and Trust</Text>
+                  </Stack>
+                </Box>
+              </Box>
+            </Stack>
+          </Box>
         </Box>
       </Flex>
     </Flex>
