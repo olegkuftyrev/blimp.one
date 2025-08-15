@@ -39,11 +39,11 @@ export const competencies = [
     id: "attractsDevelopsTalent",
     label: "Attracts and Develops Talent",
     questions: [
-      { id: "attractsDevelopsTalent-q1", question: "Do you proactively source diverse candidates for open roles?" },
-      { id: "attractsDevelopsTalent-q2", question: "How often do you hold career conversations with team members?" },
+      { id: "attractsDevelopsTalent-q1", question: "Have you successfully recruiteted diverse candidatess for your store?" },
+      { id: "attractsDevelopsTalent-q2", question: "Do your direct reports fully understand how to grow to the next level?" },
       { id: "attractsDevelopsTalent-q3", question: "Can you identify high-potential employees and their development needs?" },
-      { id: "attractsDevelopsTalent-q4", question: "Do you have a succession plan for critical positions?" },
-      { id: "attractsDevelopsTalent-q5", question: "How do you measure the effectiveness of your coaching efforts?" }
+      { id: "attractsDevelopsTalent-q4", question: "Have you promoted 3 SL / 3 Cooks within last 6 months?" },
+      { id: "attractsDevelopsTalent-q5", question: "Are you asssociates motivated and inspired to promote in your store?" }
     ],
     actions: [
       { id: "attractsDevelopsTalent-a1", action: "Schedule quarterly one-on-one career talks with each direct report." },
@@ -55,11 +55,11 @@ export const competencies = [
     id: "beingResilient",
     label: "Being Resilient",
     questions: [
-      { id: "beingResilient-q1", question: "How do you respond when targets are missed or plans change suddenly?" },
-      { id: "beingResilient-q2", question: "Do you maintain composure under high-pressure situations?" },
-      { id: "beingResilient-q3", question: "Can you share a recent setback and what you learned from it?" },
-      { id: "beingResilient-q4", question: "What strategies do you use to keep your team motivated during challenges?" },
-      { id: "beingResilient-q5", question: "How do you monitor and manage your stress levels?" }
+      { id: "beingResilient-q1", question: "Do you respond optimisticly when targets are missed or plans change suddenly?" },
+      { id: "beingResilient-q2", question: "Do you maintain composure under high-pressure / high-stress situations?" },
+      { id: "beingResilient-q3", question: "When facing challenge, do you focus on things that are in your control?" },
+      { id: "beingResilient-q4", question: "Do team members at your store keep composure in high stress situations?" },
+      { id: "beingResilient-q5", question: "Can you recognize your default behavior in stressful situations?" }
     ],
     actions: [
       { id: "beingResilient-a1", action: "Practice a daily 5-minute mindfulness or breathing exercise." },
@@ -67,11 +67,13 @@ export const competencies = [
       { id: "beingResilient-a3", action: "Build a peer network to share coping tactics and support." }
     ]
   },
+  ///// VPO, need edit!! !import
+  //// VP starts ///
   {
     id: "strategicMindset",
     label: "Strategic Mindset",
     questions: [
-      { id: "strategicMindset-q1", question: "Do you allocate time each month for long-range planning?" },
+      { id: "strategicMindset-q1", question: "Do you allocate time for long-range (+1 month) planning?" },
       { id: "strategicMindset-q2", question: "Can you articulate how current projects align with the company’s vision?" },
       { id: "strategicMindset-q3", question: "How do you prioritize initiatives with limited resources?" },
       { id: "strategicMindset-q4", question: "Do you regularly scan external factors influencing the strategy?" },
@@ -163,15 +165,16 @@ export const competencies = [
       { id: "courage-a3", action: "Provide training on assertive communication for your team." }
     ]
   },
+//// VP ENDs ///
   {
     id: "actionOriented",
     label: "Action Oriented",
     questions: [
       { id: "actionOriented-q1", question: "Do you break tasks into quick wins to maintain momentum?" },
-      { id: "actionOriented-q2", question: "How quickly do you move from planning to execution?" },
+      { id: "actionOriented-q2", question: "Do you consistently complete requests from your supervisor?" },
       { id: "actionOriented-q3", question: "Do you avoid analysis paralysis when data is incomplete?" },
-      { id: "actionOriented-q4", question: "How do you empower others to take initiative?" },
-      { id: "actionOriented-q5", question: "Can you provide an example of decisive action that led to success?" }
+      { id: "actionOriented-q4", question: "Do you empower your direct reports & peers to take initiative?" },
+      { id: "actionOriented-q5", question: "Do you complete your admin rutine (trends/eModules/workJam) on time?" }
     ],
     actions: [
       { id: "actionOriented-a1", action: "Adopt a 24-hour rule: actionable items must start within a day." },
@@ -184,10 +187,10 @@ export const competencies = [
     label: "Communicates Effectively",
     questions: [
       { id: "communicatesEffectively-q1", question: "Do you adjust your message for clarity based on audience feedback?" },
-      { id: "communicatesEffectively-q2", question: "How often do you verify understanding after giving instructions?" },
-      { id: "communicatesEffectively-q3", question: "Do you employ data visualization to reinforce key points?" },
+      { id: "communicatesEffectively-q2", question: "Do you verify understanding after giving instructions?" },
+      { id: "communicatesEffectively-q3", question: "People often feel heard after sharing with you?" },
       { id: "communicatesEffectively-q4", question: "Can you balance listening with speaking in conversations?" },
-      { id: "communicatesEffectively-q5", question: "How do you adapt communication across cultures or languages?" }
+      { id: "communicatesEffectively-q5", question: "People often clear with your instructions after your first sharing?" }
     ],
     actions: [
       { id: "communicatesEffectively-a1", action: "Use the 'teach back' method to confirm comprehension in team briefings." },
@@ -199,27 +202,27 @@ export const competencies = [
     id: "customerFocus",
     label: "Customer Focus",
     questions: [
-      { id: "customerFocus-q1", question: "Do you actively gather customer feedback at multiple touchpoints?" },
-      { id: "customerFocus-q2", question: "How do you translate customer insights into operational changes?" },
-      { id: "customerFocus-q3", question: "Can you cite metrics that track customer satisfaction and loyalty?" },
-      { id: "customerFocus-q4", question: "Do frontline staff feel empowered to resolve customer issues?" },
-      { id: "customerFocus-q5", question: "How do you anticipate customer needs before they arise?" }
+      { id: "guestFocus-q1", question: "Do you actively gather guest feedback by talking to guests?" },
+      { id: "guestFocus-q2", question: "Do you take actions based on guest feedback?" },
+      { id: "guestFocus-q3", question: "Can you understand SMG reports and teach back to your team?" },
+      { id: "guestFocus-q4", question: "Do front of the house feel empowered to resolve guest compalins?" },
+      { id: "guestFocus-q5", question: "Do you anticipate guest needs before they arise?" }
     ],
     actions: [
-      { id: "customerFocus-a1", action: "Launch a real-time NPS or SMG dashboard and review results daily." },
-      { id: "customerFocus-a2", action: "Create a 'voice of the customer' report shared in weekly ops meetings." },
-      { id: "customerFocus-a3", action: "Reward employees who receive outstanding customer praise with spot bonuses." }
+      { id: "guestFocus-a1", action: "Launch a real-time NPS or SMG dashboard and review results daily." },
+      { id: "guestFocus-a2", action: "Create a 'voice of the guest' report shared in weekly ops meetings." },
+      { id: "guestFocus-a3", action: "Reward employees who receive outstanding guest praise with spot bonuses." }
     ]
   },
   {
     id: "decisionQuality",
     label: "Decision Quality",
     questions: [
-      { id: "decisionQuality-q1", question: "Do you use a structured process when making complex decisions?" },
-      { id: "decisionQuality-q2", question: "How often do you review past decisions for learning?" },
-      { id: "decisionQuality-q3", question: "Do you balance speed and accuracy under pressure?" },
-      { id: "decisionQuality-q4", question: "Can you articulate the rationale behind key decisions to stakeholders?" },
-      { id: "decisionQuality-q5", question: "How do you incorporate diverse data sources into decisions?" }
+      { id: "decisionQuality-q1", question: "Do you structure complex decisions using pros & cons sheet?" },
+      { id: "decisionQuality-q2", question: "Do people often come to you for advise on their challenges?" },
+      { id: "decisionQuality-q3", question: "Does your decision process often bring you to the expected results?" },
+      { id: "decisionQuality-q4", question: "Can you share the logic behind your decisions to others?" },
+      { id: "decisionQuality-q5", question: "Do you include data into your decision process?" }
     ],
     actions: [
       { id: "decisionQuality-a1", action: "Adopt a decision matrix template for comparing options with weighted criteria." },
@@ -231,11 +234,11 @@ export const competencies = [
     id: "ensuresAccountability",
     label: "Ensures Accountability",
     questions: [
-      { id: "ensuresAccountability-q1", question: "Do you set clear expectations and deadlines for every deliverable?" },
-      { id: "ensuresAccountability-q2", question: "How do you track ownership of tasks among team members?" },
-      { id: "ensuresAccountability-q3", question: "Do you provide timely feedback when commitments slip?" },
-      { id: "ensuresAccountability-q4", question: "Can you describe the consequences for not meeting standards?" },
-      { id: "ensuresAccountability-q5", question: "How do you model accountability through your own behavior?" }
+      { id: "ensuresAccountability-q1", question: "Do you set clear expectations and deadlines for every associate?" },
+      { id: "ensuresAccountability-q2", question: "Do you track ownership of tasks among team members?" },
+      { id: "ensuresAccountability-q3", question: "Do you provide timely feedback when commitments not meet?" },
+      { id: "ensuresAccountability-q4", question: "Can you describe the consequences for not meeting standards based on the policies?" },
+      { id: "ensuresAccountability-q5", question: "Do you model accountability through your own behavior?" }
     ],
     actions: [
       { id: "ensuresAccountability-a1", action: "Use a RACI chart for all cross-functional projects." },
@@ -249,9 +252,9 @@ export const competencies = [
     questions: [
       { id: "valuesDifferences-q1", question: "Do you actively seek input from people with diverse backgrounds?" },
       { id: "valuesDifferences-q2", question: "Can you identify and mitigate unconscious bias in your processes?" },
-      { id: "valuesDifferences-q3", question: "How do you ensure inclusive participation in meetings?" },
-      { id: "valuesDifferences-q4", question: "Do you recognize and celebrate cultural events in your workplace?" },
-      { id: "valuesDifferences-q5", question: "How do you handle conflicts arising from differing perspectives?" }
+      { id: "valuesDifferences-q3", question: "Do you ensure inclusive participation in meetings?" },
+      { id: "valuesDifferences-q4", question: "Can you recognize and celebrate cultural events in your workplace?" },
+      { id: "valuesDifferences-q5", question: "Do you handle conflicts arising from differing perspectives?" }
     ],
     actions: [
       { id: "valuesDifferences-a1", action: "Provide DEI training and track participation metrics." },
@@ -264,10 +267,10 @@ export const competencies = [
     label: "Integrity and Trust",
     questions: [
       { id: "integrityTrust-q1", question: "Do you consistently follow through on promises and commitments?" },
-      { id: "integrityTrust-q2", question: "How transparent are you about decision-making criteria?" },
-      { id: "integrityTrust-q3", question: "Do you admit mistakes and correct them quickly?" },
+      { id: "integrityTrust-q2", question: "Are you transparent about decision-making criteria?" },
+      { id: "integrityTrust-q3", question: "Do you accept mistakes and correct them quickly?" },
       { id: "integrityTrust-q4", question: "Can team members rely on you to act ethically under pressure?" },
-      { id: "integrityTrust-q5", question: "How do you protect confidential information and data privacy?" }
+      { id: "integrityTrust-q5", question: "Do you protect confidential information?" }
     ],
     actions: [
       { id: "integrityTrust-a1", action: "Publish a personal 'leadership code' outlining your ethical standards." },

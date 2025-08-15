@@ -7,6 +7,7 @@ import FocusStep from "./pages/IDP/FocusStep";
 import CompetencyQuestions from "./pages/IDP/CompetencyQuestions"
 import Results from "./pages/IDP/Results"
 import PL from "./pages/PL";
+import SMG from "./pages/SMG"
 import PLstudy from "./pages/PLstudy"
 import TopNav from "./components/TopNav";
 
@@ -22,6 +23,7 @@ function AppWrapper() {
         <Route path="/idp" element={<JobTitleStep />} />
         <Route path="/idp/focus" element={<FocusStep />} />
         <Route path="/pl" element={<PL />} />
+        <Route path="/smg" element={<SMG />} />
         <Route path="/plstudy" element={<PLstudy />} />
         <Route path="/idp/questions" element={<CompetencyQuestions />} />
         <Route path="/idp/results" element={<Results />} />

@@ -100,6 +100,20 @@ const [clickCount, setClickCount] = useState(0);
         </VStack>
         {clickCount >= 3 && <ActionSecret />}
       </Box>
+        {/* Placeholder 2 — under development */}
+      <Box bg="gray.300" color="gray.600" filter="grayscale(100%)" pointerEvents="none" {...tileStyles}>
+        <VStack spacing={2}>
+          <Heading size="sm" textAlign="center">Talent Tracker</Heading>
+          <Text fontSize="sm" textAlign="center">Under development</Text>
+        </VStack>
+      </Box>
+        {/* Placeholder 2 — under development */}
+      <Box bg="gray.300" color="gray.600" filter="grayscale(100%)" pointerEvents="none" {...tileStyles}>
+        <VStack spacing={2}>
+          <Heading size="sm" textAlign="center">SMG Tracker</Heading>
+          <Text fontSize="sm" textAlign="center">Under development</Text>
+        </VStack>
+      </Box>
     </SimpleGrid>
   );
 }
