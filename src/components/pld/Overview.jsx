@@ -10,6 +10,8 @@ import {
   Tooltip,
   Stat,
   HStack,
+  DataList,
+  Flex,
 } from "@chakra-ui/react";
 import { 
   safe,
@@ -405,59 +407,6 @@ export default function Knows({ values, rows, actualIdx }) {
       </SimpleGrid>
 
       <Heading size="md" marginTop={8} marginBottom={4}>
-        Financial Metrics
-      </Heading>
-
-      {/* spacing={6} добавляет отступ между карточками */}
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4}>
-        {financialMetrics.map(({ label, value, detail, delta, color, isBusiest, formula }, i) => (
-          <Box
-            key={i}
-            position="relative"
-            bg="white"
-            borderRadius="md"
-            shadow="sm"
-            border="1px"
-            p={4}
-          >
-            {isBusiest && (
-              <Badge
-                position="absolute"
-                top={2}
-                right={2}
-                colorScheme="blackAlpha"
-              >
-                Busiest Time
-              </Badge>
-            )}
-            <VStack align="start" spacing={1}>
-              <Text fontSize="sm" color="gray.500">
-                {label}
-              </Text>
-              <Text fontWeight="bold" color={color || "inherit"} fontSize="xl">
-                {value}
-              </Text>
-              {detail && (
-                <Text fontSize="xs" color="gray.500">
-                  {detail}
-                </Text>
-              )}
-              {delta && (
-                <Text fontSize="xs" color="gray.700">
-                  {delta}
-                </Text>
-              )}
-              {formula && (
-                <Text fontSize="xs" color="gray.400">
-                  {formula}
-                </Text>
-              )}
-            </VStack>
-          </Box>
-        ))}
-      </SimpleGrid>
-
-      <Heading size="md" marginTop={8} marginBottom={4}>
         Controllable Profit Metrics
       </Heading>
 
@@ -594,6 +543,161 @@ export default function Knows({ values, rows, actualIdx }) {
           </Box>
         ))}
       </SimpleGrid>
+
+      {/* Alternative DataList view for Labor Metrics */}
+      <Flex 
+        direction={{ base: "column", lg: "row" }}
+        gap={6}
+        flexWrap="wrap"
+        justify="space-between"
+      >
+        {/* Labor Metrics DataList Card */}
+        <Box
+          bg="white"
+          borderRadius="xl"
+          shadow="md"
+          borderWidth="1px"
+          borderColor="blue.200"
+          p={6}
+          position="relative"
+          overflow="hidden"
+          flex={{ base: "1", lg: "1" }}
+          minW={{ base: "100%", lg: "300px" }}
+          maxW={{ base: "100%", lg: "calc(33.333% - 12px)" }}
+        >
+          {/* Blue accent bar at top */}
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            right="0"
+            height="4px"
+            bgGradient="linear(to-r, blue.400, blue.600)"
+          />
+          
+          <Heading size="md" marginBottom={4} color="blue.600">
+            Labor Metrics (DataList View)
+          </Heading>
+          
+          <Box bg="gray.50" borderRadius="lg" borderWidth="1px" borderColor="gray.200" p={4}>
+            <DataList.Root>
+              {laborMetrics.map(({ label, value, detail, delta, color, formula }, i) => (
+                <DataList.Item key={i}>
+                  <DataList.ItemLabel fontSize="sm" color="gray.500">
+                    {label}
+                  </DataList.ItemLabel>
+                  <DataList.ItemValue fontWeight="bold" color={color || "inherit"} fontSize="xl">
+                    {value}
+                  </DataList.ItemValue>
+                  {formula && (
+                    <Text fontSize="xs" color="gray.400" mt="1">
+                      {formula}
+                    </Text>
+                  )}
+                </DataList.Item>
+              ))}
+            </DataList.Root>
+          </Box>
+        </Box>
+
+        {/* Financial Metrics DataList Card */}
+        <Box
+          bg="white"
+          borderRadius="xl"
+          shadow="md"
+          borderWidth="1px"
+          borderColor="green.200"
+          p={6}
+          position="relative"
+          overflow="hidden"
+          flex={{ base: "1", lg: "1" }}
+          minW={{ base: "100%", lg: "300px" }}
+          maxW={{ base: "100%", lg: "calc(33.333% - 12px)" }}
+        >
+          {/* Green accent bar at top */}
+          <Box
+            position="absolute"
+            top="0"
+            right="0"
+            left="0"
+            height="4px"
+            bgGradient="linear(to-r, green.400, green.600)"
+          />
+          
+          <Heading size="md" marginBottom={4} color="green.600">
+            Financial Metrics (DataList View)
+          </Heading>
+          
+          <Box bg="gray.50" borderRadius="lg" borderWidth="1px" borderColor="gray.200" p={4}>
+            <DataList.Root>
+              {financialMetrics.map(({ label, value, detail, delta, color, formula }, i) => (
+                <DataList.Item key={i}>
+                  <DataList.ItemLabel fontSize="sm" color="gray.500">
+                    {label}
+                  </DataList.ItemLabel>
+                  <DataList.ItemValue fontWeight="bold" color={color || "inherit"} fontSize="xl">
+                    {value}
+                  </DataList.ItemValue>
+                  {formula && (
+                    <Text fontSize="xs" color="gray.400" mt="1">
+                      {formula}
+                    </Text>
+                  )}
+                </DataList.Item>
+              ))}
+            </DataList.Root>
+          </Box>
+        </Box>
+
+        {/* Controllable Profit Metrics DataList Card */}
+        <Box
+          bg="white"
+          borderRadius="xl"
+          shadow="md"
+          borderWidth="1px"
+          borderColor="purple.200"
+          p={6}
+          position="relative"
+          overflow="hidden"
+          flex={{ base: "1", lg: "1" }}
+          minW={{ base: "100%", lg: "300px" }}
+          maxW={{ base: "100%", lg: "calc(33.333% - 12px)" }}
+        >
+          {/* Purple accent bar at top */}
+          <Box
+            position="absolute"
+            top="0"
+            right="0"
+            left="0"
+            height="4px"
+            bgGradient="linear(to-r, purple.400, purple.600)"
+          />
+          
+          <Heading size="md" marginBottom={4} color="purple.600">
+            Controllable Profit Metrics (DataList View)
+          </Heading>
+          
+          <Box bg="gray.50" borderRadius="lg" borderWidth="1px" borderColor="gray.200" p={4}>
+            <DataList.Root>
+              {cpMetrics.map(({ label, value, detail, delta, color, formula }, i) => (
+                <DataList.Item key={i}>
+                  <DataList.ItemLabel fontSize="sm" color="gray.500">
+                    {label}
+                  </DataList.ItemLabel>
+                  <DataList.ItemValue fontWeight="bold" color={color || "inherit"} fontSize="xl">
+                    {value}
+                  </DataList.ItemValue>
+                  {formula && (
+                    <Text fontSize="xs" color="gray.400" mt="1">
+                      {formula}
+                    </Text>
+                  )}
+                </DataList.Item>
+              ))}
+            </DataList.Root>
+          </Box>
+        </Box>
+      </Flex>
     </Box>
   );
 }

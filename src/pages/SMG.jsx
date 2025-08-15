@@ -1,6 +1,6 @@
 // src/pages/SMG.jsx
 import React, { useState } from "react";
-import { Box, Text, Input, Table, VStack, HStack, Grid, Button, Tooltip } from "@chakra-ui/react";
+import { Box, Text, Input, Table, VStack, HStack, Grid, Button, Tooltip, Flex } from "@chakra-ui/react";
 import * as XLSX from "xlsx";
 
 // Helper functions for calculations
@@ -475,7 +475,13 @@ export default function SMG() {
                 <Text fontSize="lg" fontWeight="semibold" color="gray.700" mb={4} textAlign="center">
                   Region Performance Overview
                 </Text>
-                <HStack align="center" spacing={6} w="100%">
+                <Flex 
+                  direction={{ base: "column", lg: "row" }}
+                  align="center" 
+                  spacing={6} 
+                  w="100%"
+                  gap={6}
+                >
                   {/* Left Column - Gauge Chart and KPIs */}
                   <Box flex="1" minW="300px">
                     <VStack align="center" spacing={4}>
@@ -547,14 +553,15 @@ export default function SMG() {
                   {/* Right Column - Performance Insight Cards */}
                   <Box flex="2" minW="600px">
                     {/* First Row */}
-                    <Grid 
-                      templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }}
+                    <Flex 
+                      direction={{ base: "column", sm: "row" }}
                       gap={{ base: 2, md: 3 }}
                       w="100%"
                       mb={4}
+                      flexWrap="wrap"
                     >
                       {/* Top Performers */}
-                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
+                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200" flex="1" minW="200px">
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="green.500" rounded="full" />
@@ -572,7 +579,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Meet ToF */}
-                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
+                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200" flex="1" minW="200px">
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="green.500" rounded="full" />
@@ -590,7 +597,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Meet OSAT */}
-                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
+                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200" flex="1" minW="200px">
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="green.500" rounded="full" />
@@ -608,7 +615,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Close to Target */}
-                      <Box bg="orange.50" p={4} rounded="lg" borderWidth="1px" borderColor="orange.200">
+                      <Box bg="orange.50" p={4} rounded="lg" borderWidth="1px" borderColor="orange.200" flex="1" minW="200px">
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="orange.500" rounded="full" />
@@ -627,16 +634,17 @@ export default function SMG() {
                           </Text>
                         </VStack>
                       </Box>
-                    </Grid>
+                    </Flex>
                     
                     {/* Second Row */}
-                    <Grid 
-                      templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }}
+                    <Flex 
+                      direction={{ base: "column", sm: "row" }}
                       gap={{ base: 2, md: 3 }}
                       w="100%"
+                      flexWrap="wrap"
                     >
                       {/* Needs Attention */}
-                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
+                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200" flex="1" minW="200px">
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="red.500" rounded="full" />
@@ -654,7 +662,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Didn't meet ToF */}
-                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
+                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200" flex="1" minW="200px">
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="red.500" rounded="full" />
@@ -672,7 +680,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Didn't meet OSAT */}
-                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
+                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200" flex="1" minW="200px">
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="red.500" rounded="full" />
@@ -690,7 +698,7 @@ export default function SMG() {
                       </Box>
                       
                       {/* Mixed Performance */}
-                      <Box bg="blue.50" p={4} rounded="lg" borderWidth="1px" borderColor="blue.200">
+                      <Box bg="blue.50" p={4} rounded="lg" borderWidth="1px" borderColor="blue.200" flex="1" minW="200px">
                         <VStack align="start" spacing={2}>
                           <HStack spacing={2} align="center">
                             <Box w="3" h="3" bg="blue.500" rounded="full" />
@@ -709,9 +717,9 @@ export default function SMG() {
                           </Text>
                         </VStack>
                       </Box>
-                    </Grid>
+                    </Flex>
                   </Box>
-                </HStack>
+                </Flex>
               </Box>
               
               {/* Summary Table */}
