@@ -1067,13 +1067,13 @@ export default function SMG() {
                           >
                             <HStack 
                               flexWrap="wrap" 
-                              justify="space-between"
+                              justify="space-around"
                               align="flex-start"
                               direction={{ base: "column", md: "row" }}
                               spacing={{ base: 4, md: 6 }}
                             >
                               {/* Overall Performance - Donut Chart */}
-                              <VStack align="center" spacing={3} minW={{ base: "140px", md: "160px" }}>
+                              <VStack align="center" spacing={2} minW={{ base: "140px", md: "160px" }}>
                                 <Text fontSize="sm" color="gray.700" fontWeight="semibold">
                                   Overall Performance
                                 </Text>
@@ -1169,28 +1169,6 @@ export default function SMG() {
                                     </Text>
                                   </Box>
                                 </Box>
-                                
-                                {/* Legend */}
-                                <VStack spacing={1} align="start">
-                                  <HStack spacing={2}>
-                                    <Box w="3" h="3" bg="green.400" rounded="full" />
-                                    <Text fontSize="xs" color="gray.600">
-                                      {meetBoth} Both ({((meetBoth / areaData.length) * 100).toFixed(0)}%)
-                                    </Text>
-                                  </HStack>
-                                  <HStack spacing={2}>
-                                    <Box w="3" h="3" bg="orange.400" rounded="full" />
-                                    <Text fontSize="xs" color="gray.600">
-                                      {meetOne} One ({((meetOne / areaData.length) * 100).toFixed(0)}%)
-                                    </Text>
-                                  </HStack>
-                                  <HStack spacing={2}>
-                                    <Box w="3" h="3" bg="red.400" rounded="full" />
-                                    <Text fontSize="xs" color="gray.600">
-                                      {meetNeither} None ({((meetNeither / areaData.length) * 100).toFixed(0)}%)
-                                    </Text>
-                                  </HStack>
-                                </VStack>
                               </VStack>
                               
                               {/* ToF Performance */}
