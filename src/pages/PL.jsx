@@ -15,6 +15,7 @@ import {
 import useExcelRows from "../hooks/useExcelRows.js";
 import { useAppStore } from "../store/useAppStore.js";
 import PLUploadBar from "../components/PLUploadBar.jsx";
+import parseValues from '../utils/parseValues';
 
 import Overview from "../components/pld/Overview.jsx";
 
@@ -43,7 +44,9 @@ function DebugTable({ rows, maxRows = 15 }) {
   ];
 
   return (
+    
     <Table.Root size="sm" variant="simple" overflowX="auto">
+      
       <Table.Header>
         <Table.Row>
           {header.map((h, idx) => (
@@ -69,7 +72,10 @@ function DebugTable({ rows, maxRows = 15 }) {
 }
 
 export default function PL() {
+  
   const { rows, load } = useExcelRows();
+  const parsedValues = rows.length > 1 ? parseValues(rows) : {};
+
   const [loading, setLoading] = useState(false);
   const setPlData = useAppStore((s) => s.setPlData);
 
@@ -206,7 +212,7 @@ export default function PL() {
             P&amp;L Dashboard
           </Text>
           <Box mb={6}>
-            <Overview values={values} />
+            <Overview values={parsedValues} />
           </Box>
           <Box mb={6}>
             <COGSchart rows={rows} />

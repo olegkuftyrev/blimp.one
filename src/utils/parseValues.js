@@ -1,5 +1,3 @@
-// /src/utils/parseValues.js
-
 import { safe } from './calcUtils';
 
 export default function parseValues(rows) {

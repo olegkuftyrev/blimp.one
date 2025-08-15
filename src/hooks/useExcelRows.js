@@ -1,4 +1,3 @@
-// src/hooks/useExcelRows.js
 import * as XLSX from "xlsx";
 import { useState, useCallback } from "react";
 
