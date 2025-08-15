@@ -127,7 +127,7 @@ const STORE_AREAS = {
   "Lam": ["599", "1423", "1449", "1596", "2527"],
   "Oscar": ["815", "1080", "1182", "1220", "1495", "1670", "1708", "2047", "2128", "2129", "2875", "2966", "3544"],
   "Sam": ["817", "1020", "1094", "1105", "1183", "1209", "1235", "1270", "1535", "1672", "2015", "2386", "3422", "3496", "3783"],
-  "Simon": ["566", "708", "884", "1016", "1024", "1074", "1219", "1232", "1564", "1709", "1725", "1881", "2605", "3829"]
+  "Simon": ["1650", "1649", "566", "708", "884", "1016", "1024", "1074", "1219", "1232", "1564", "1709", "1725", "1881", "2605", "3829"]
 };
 
 // Function to get area for a store
@@ -141,6 +141,20 @@ const getStoreArea = (storeNumber) => {
   }
   
   return "Region"; // Default for unknown stores
+};
+
+// Function to get performance priority for sorting (green=1, orange=2, red=3)
+const getPerformancePriority = (row) => {
+  const meetsToF = row.tofDifference >= 0;
+  const meetsOSAT = row.osatDifference >= 0;
+  
+  if (meetsToF && meetsOSAT) {
+    return 1; // Green - highest priority
+  } else if (!meetsToF && !meetsOSAT) {
+    return 3; // Red - lowest priority
+  } else {
+    return 2; // Orange - medium priority
+  }
 };
 
 export default function SMG() {
@@ -303,6 +317,218 @@ export default function SMG() {
 
         {data.length > 0 && (
           <VStack spacing={6} align="stretch">
+            {/* Summary Table */}
+            <Box>
+              <Text 
+                fontSize="xl" 
+                fontWeight="bold" 
+                color="gray.700" 
+                mb={3}
+                pl={2}
+                borderLeft="4px solid"
+                borderColor="gray.500"
+              >
+                Performance Summary by Area
+              </Text>
+              <Box 
+                overflow="auto" 
+                borderWidth="1px" 
+                borderColor="gray.200"
+                rounded="lg"
+                shadow="sm"
+                bg="white"
+              >
+                <Table.Root size="sm" variant="simple">
+                  <Table.Header>
+                    <Table.Row bg="gray.100" borderBottom="2px" borderColor="gray.300">
+                      <Table.ColumnHeader 
+                        py={3} 
+                        px={4} 
+                        fontSize="sm"
+                        fontWeight="bold"
+                        color="gray.800"
+                        textAlign="center"
+                        borderRight="1px solid"
+                        borderColor="gray.300"
+                      >
+                        Area
+                      </Table.ColumnHeader>
+                      <Table.ColumnHeader 
+                        py={3} 
+                        px={4} 
+                        fontSize="sm"
+                        fontWeight="bold"
+                        color="gray.800"
+                        textAlign="center"
+                        borderRight="1px solid"
+                        borderColor="gray.300"
+                      >
+                        Store Count
+                      </Table.ColumnHeader>
+                      <Table.ColumnHeader 
+                        py={3} 
+                        px={4} 
+                        fontSize="sm"
+                        fontWeight="bold"
+                        color="gray.800"
+                        textAlign="center"
+                        borderRight="1px solid"
+                        borderColor="gray.300"
+                      >
+                        Meet ToF Target
+                      </Table.ColumnHeader>
+                      <Table.ColumnHeader 
+                        py={3} 
+                        px={4} 
+                        fontSize="sm"
+                        fontWeight="bold"
+                        color="gray.800"
+                        textAlign="center"
+                        borderRight="1px solid"
+                        borderColor="gray.300"
+                      >
+                        % Meet ToF
+                      </Table.ColumnHeader>
+                      <Table.ColumnHeader 
+                        py={3} 
+                        px={4} 
+                        fontSize="sm"
+                        fontWeight="bold"
+                        color="gray.800"
+                        textAlign="center"
+                        borderRight="1px solid"
+                        borderColor="gray.300"
+                      >
+                        Meet OSAT Target
+                      </Table.ColumnHeader>
+                      <Table.ColumnHeader 
+                        py={3} 
+                        px={4} 
+                        fontSize="sm"
+                        fontWeight="bold"
+                        color="gray.800"
+                        textAlign="center"
+                        borderRight="1px solid"
+                        borderColor="gray.300"
+                      >
+                        % Meet OSAT
+                      </Table.ColumnHeader>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    {(() => {
+                      // Calculate summary data for each area
+                      const summaryData = Object.entries(STORE_AREAS).map(([areaName, storeNumbers]) => {
+                        const areaData = data.filter(row => 
+                          storeNumbers.includes(String(row.storeNumber).replace(/^0+/, ''))
+                        );
+                        
+                        if (areaData.length === 0) return null;
+                        
+                        const meetToF = areaData.filter(row => row.tofDifference >= 0).length;
+                        const meetOSAT = areaData.filter(row => row.osatDifference >= 0).length;
+                        const totalStores = areaData.length;
+                        
+                        return {
+                          areaName,
+                          storeCount: totalStores,
+                          meetToF,
+                          meetToFPercent: totalStores > 0 ? ((meetToF / totalStores) * 100).toFixed(1) : "0.0",
+                          meetOSAT,
+                          meetOSATPercent: totalStores > 0 ? ((meetOSAT / totalStores) * 100).toFixed(1) : "0.0"
+                        };
+                      }).filter(Boolean);
+                      
+                      // Calculate totals
+                      const totalStores = data.length;
+                      const totalMeetToF = data.filter(row => row.tofDifference >= 0).length;
+                      const totalMeetOSAT = data.filter(row => row.osatDifference >= 0).length;
+                      
+                      const totalRow = {
+                        areaName: "Total",
+                        storeCount: totalStores,
+                        meetToF: totalMeetToF,
+                        meetToFPercent: totalStores > 0 ? ((totalMeetToF / totalStores) * 100).toFixed(1) : "0.0",
+                        meetOSAT: totalMeetOSAT,
+                        meetOSATPercent: totalStores > 0 ? ((totalMeetOSAT / totalStores) * 100).toFixed(1) : "0.0"
+                      };
+                      
+                      return [...summaryData, totalRow].map((row, index) => (
+                        <Table.Row 
+                          key={row.areaName}
+                          bg={index % 4 === 0 ? "pink.50" : 
+                              index % 4 === 1 ? "blue.50" : 
+                              index % 4 === 2 ? "purple.50" : 
+                              index % 4 === 3 ? "green.50" : 
+                              row.areaName === "Total" ? "gray.100" : "white"}
+                          borderBottom="1px"
+                          borderColor="gray.200"
+                        >
+                          <Table.Cell 
+                            py={3} 
+                            px={4} 
+                            fontWeight="bold"
+                            textAlign="center"
+                            borderRight="1px solid"
+                            borderColor="gray.300"
+                          >
+                            {row.areaName}
+                          </Table.Cell>
+                          <Table.Cell 
+                            py={3} 
+                            px={4} 
+                            textAlign="center"
+                            borderRight="1px solid"
+                            borderColor="gray.300"
+                          >
+                            {row.storeCount}
+                          </Table.Cell>
+                          <Table.Cell 
+                            py={3} 
+                            px={4} 
+                            textAlign="center"
+                            borderRight="1px solid"
+                            borderColor="gray.300"
+                          >
+                            {row.meetToF}
+                          </Table.Cell>
+                          <Table.Cell 
+                            py={3} 
+                            px={4} 
+                            textAlign="center"
+                            borderRight="1px solid"
+                            borderColor="gray.300"
+                            fontWeight="bold"
+                          >
+                            {row.meetToFPercent}%
+                          </Table.Cell>
+                          <Table.Cell 
+                            py={3} 
+                            px={4} 
+                            textAlign="center"
+                            borderRight="1px solid"
+                            borderColor="gray.300"
+                          >
+                            {row.meetOSAT}
+                          </Table.Cell>
+                          <Table.Cell 
+                            py={3} 
+                            px={4} 
+                            textAlign="center"
+                            borderRight="1px solid"
+                            borderColor="gray.300"
+                            fontWeight="bold"
+                          >
+                            {row.meetOSATPercent}%
+                          </Table.Cell>
+                        </Table.Row>
+                      ));
+                    })()}
+                  </Table.Body>
+                </Table.Root>
+              </Box>
+            </Box>
+            
             {/* Group data by area */}
             {Object.entries(STORE_AREAS).map(([areaName, storeNumbers]) => {
               const areaData = data.filter(row => 
@@ -310,6 +536,11 @@ export default function SMG() {
               );
               
               if (areaData.length === 0) return null;
+              
+              // Sort by performance: green first, orange second, red last
+              const sortedAreaData = [...areaData].sort((a, b) => 
+                getPerformancePriority(a) - getPerformancePriority(b)
+              );
               
               return (
                 <Box key={areaName}>
@@ -344,12 +575,6 @@ export default function SMG() {
                                 fontWeight="semibold"
                                 color="gray.700"
                                 textAlign="center"
-                                bg={index === 0 ? "gray.100" : 
-                                    index === 2 ? "green.100" :
-                                    index >= 3 && index <= 5 ? "red.100" :
-                                    index === 6 ? "green.200" :
-                                    index >= 7 && index <= 9 ? "blue.100" :
-                                    index === 10 ? "green.200" : "white"}
                                 borderRight={index < smartHeaders.length - 2 ? "1px solid" : "none"}
                                 borderColor="gray.200"
                               >
@@ -359,7 +584,7 @@ export default function SMG() {
                           </Table.Row>
                         </Table.Header>
                         <Table.Body>
-                          {areaData.map((row, rowIndex) => (
+                          {sortedAreaData.map((row, rowIndex) => (
                             <Table.Row 
                               key={rowIndex}
                               _hover={{ bg: "gray.50" }}
@@ -369,11 +594,23 @@ export default function SMG() {
                               <Table.Cell 
                                 py={3} 
                                 px={4} 
-                                bg="green.100" 
                                 fontWeight="medium"
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                bg={(() => {
+                                  // Check if store meets both targets
+                                  const meetsToF = row.tofDifference >= 0;
+                                  const meetsOSAT = row.osatDifference >= 0;
+                                  
+                                  if (meetsToF && meetsOSAT) {
+                                    return "green.50"; // Both targets met - green
+                                  } else if (!meetsToF && !meetsOSAT) {
+                                    return "red.50"; // Neither target met - red
+                                  } else {
+                                    return "orange.50"; // At least one target met - orange
+                                  }
+                                })()}
                               >
                                 {row.storeNumber}
                               </Table.Cell>
@@ -390,7 +627,6 @@ export default function SMG() {
                                 py={3} 
                                 px={4} 
                                 textAlign="center"
-                                bg="green.50"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
                               >
@@ -409,7 +645,6 @@ export default function SMG() {
                                 py={3} 
                                 px={4} 
                                 textAlign="center"
-                                bg={row.isDefaultTarget ? "pink.100" : ""}
                                 borderRight="1px solid"
                                 borderColor="gray.200"
                               >
@@ -421,7 +656,6 @@ export default function SMG() {
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
-                                {...getDifferenceStyle(row.tofDifference)}
                               >
                                 {row.tofDifference?.toFixed(1) || ""}
                               </Table.Cell>
@@ -429,12 +663,11 @@ export default function SMG() {
                                 py={3} 
                                 px={4} 
                                 textAlign="center"
-                                bg="green.200"
-                                fontWeight="medium"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                bg={row.tofSurveysNeeded ? "red.50" : ""}
                               >
-                                {row.tofSurveysNeeded || ""}
+                                {row.tofSurveysNeeded ? row.tofSurveysNeeded : `+${Math.abs(row.tofDifference).toFixed(1)}%`}
                               </Table.Cell>
                               <Table.Cell 
                                 py={3} 
@@ -449,7 +682,6 @@ export default function SMG() {
                                 py={3} 
                                 px={4} 
                                 textAlign="center"
-                                bg={row.isDefaultTarget ? "pink.100" : ""}
                                 borderRight="1px solid"
                                 borderColor="gray.200"
                               >
@@ -461,7 +693,6 @@ export default function SMG() {
                                 textAlign="center"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
-                                {...getDifferenceStyle(row.osatDifference)}
                               >
                                 {row.osatDifference?.toFixed(1) || ""}
                               </Table.Cell>
@@ -469,12 +700,11 @@ export default function SMG() {
                                 py={3} 
                                 px={4} 
                                 textAlign="center"
-                                bg="green.200"
-                                fontWeight="medium"
                                 borderRight="1px solid"
                                 borderColor="gray.200"
+                                bg={row.osatSurveysNeeded ? "red.50" : ""}
                               >
-                                {row.osatSurveysNeeded || ""}
+                                {row.osatSurveysNeeded ? row.osatSurveysNeeded : `+${Math.abs(row.osatDifference).toFixed(1)}%`}
                               </Table.Cell>
                             </Table.Row>
                           ))}
@@ -493,6 +723,11 @@ export default function SMG() {
               });
               
               if (regionData.length === 0) return null;
+              
+              // Sort by performance: green first, orange second, red last
+              const sortedRegionData = [...regionData].sort((a, b) => 
+                getPerformancePriority(a) - getPerformancePriority(b)
+              );
               
               return (
                 <Box>
@@ -527,12 +762,6 @@ export default function SMG() {
                               fontWeight="semibold"
                               color="gray.700"
                               textAlign="center"
-                              bg={index === 0 ? "gray.100" : 
-                                  index === 2 ? "green.100" :
-                                  index >= 3 && index <= 5 ? "red.100" :
-                                  index === 6 ? "green.200" :
-                                  index >= 7 && index <= 9 ? "blue.100" :
-                                  index === 10 ? "green.200" : "white"}
                               borderRight={index < smartHeaders.length - 2 ? "1px solid" : "none"}
                               borderColor="gray.200"
                             >
@@ -542,7 +771,7 @@ export default function SMG() {
                         </Table.Row>
                       </Table.Header>
                       <Table.Body>
-                        {regionData.map((row, rowIndex) => (
+                        {sortedRegionData.map((row, rowIndex) => (
                           <Table.Row 
                             key={rowIndex}
                             _hover={{ bg: "gray.50" }}
@@ -552,11 +781,23 @@ export default function SMG() {
                             <Table.Cell 
                               py={3} 
                               px={4} 
-                              bg="green.100" 
                               fontWeight="medium"
                               textAlign="center"
                               borderRight="1px solid"
                               borderColor="gray.200"
+                              bg={(() => {
+                                // Check if store meets both targets
+                                const meetsToF = row.tofDifference >= 0;
+                                const meetsOSAT = row.osatDifference >= 0;
+                                
+                                if (meetsToF && meetsOSAT) {
+                                  return "green.50"; // Both targets met - green
+                                } else if (!meetsToF && !meetsOSAT) {
+                                  return "red.50"; // Neither target met - red
+                                } else {
+                                  return "orange.50"; // At least one target met - orange
+                                }
+                              })()}
                             >
                               {row.storeNumber}
                             </Table.Cell>
@@ -592,7 +833,6 @@ export default function SMG() {
                               py={3} 
                               px={4} 
                               textAlign="center"
-                              bg={row.isDefaultTarget ? "pink.100" : ""}
                               borderRight="1px solid"
                               borderColor="gray.200"
                             >
@@ -612,12 +852,11 @@ export default function SMG() {
                               py={3} 
                               px={4} 
                               textAlign="center"
-                              bg="green.200"
-                              fontWeight="medium"
                               borderRight="1px solid"
                               borderColor="gray.200"
+                              bg={row.tofSurveysNeeded ? "red.50" : ""}
                             >
-                              {row.tofSurveysNeeded || ""}
+                              {row.tofSurveysNeeded ? row.tofSurveysNeeded : `+${Math.abs(row.tofDifference).toFixed(1)}%`}
                             </Table.Cell>
                             <Table.Cell 
                               py={3} 
@@ -632,7 +871,6 @@ export default function SMG() {
                               py={3} 
                               px={4} 
                               textAlign="center"
-                              bg={row.isDefaultTarget ? "pink.100" : ""}
                               borderRight="1px solid"
                               borderColor="gray.200"
                             >
@@ -657,7 +895,7 @@ export default function SMG() {
                               borderRight="1px solid"
                               borderColor="gray.200"
                             >
-                              {row.osatSurveysNeeded || ""}
+                              {row.osatSurveysNeeded ? row.osatSurveysNeeded : `+${Math.abs(row.osatDifference).toFixed(1)}%`}
                             </Table.Cell>
                           </Table.Row>
                         ))}
