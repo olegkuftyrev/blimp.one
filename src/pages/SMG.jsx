@@ -1219,12 +1219,91 @@ export default function SMG() {
                                   <Text fontSize="sm" color="gray.700" fontWeight="semibold">
                                     ToF Target
                                   </Text>
-                                  <Text fontSize="xl" fontWeight="bold" color={meetToF > areaData.length / 2 ? "green.600" : "red.600"}>
-                                    {tofPercent}%
-                                  </Text>
-                                  <Text fontSize="xs" color="gray.500">
-                                    {meetToF}/{areaData.length} stores
-                                  </Text>
+                                  
+                                  {/* ToF Donut Chart */}
+                                  <Box position="relative" w="80px" h="80px">
+                                    <svg width="80" height="80" viewBox="0 0 80 80">
+                                      {/* Calculate angles for ToF */}
+                                      {(() => {
+                                        const totalStores = areaData.length;
+                                        const meetToFCount = meetToF;
+                                        const notMeetToFCount = totalStores - meetToF;
+                                        
+                                        const meetToFAngle = (meetToFCount / totalStores) * 360;
+                                        const notMeetToFAngle = (notMeetToFCount / totalStores) * 360;
+                                        
+                                        // SVG circle calculations
+                                        const radius = 32;
+                                        const centerX = 40;
+                                        const centerY = 40;
+                                        
+                                        // Helper function to create arc path
+                                        const createArc = (startAngle, endAngle) => {
+                                          const startRad = (startAngle - 90) * Math.PI / 180;
+                                          const endRad = (endAngle - 90) * Math.PI / 180;
+                                          
+                                          const x1 = centerX + radius * Math.cos(startRad);
+                                          const y1 = centerY + radius * Math.sin(startRad);
+                                          const x2 = centerX + radius * Math.cos(endRad);
+                                          const y2 = centerY + radius * Math.sin(endRad);
+                                          
+                                          const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+                                          
+                                          return `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} L ${centerX} ${centerY} Z`;
+                                        };
+                                        
+                                        let currentAngle = 0;
+                                        
+                                        return (
+                                          <>
+                                            {/* Green segment - Meet ToF Target */}
+                                            {meetToFCount > 0 && (
+                                              <path
+                                                d={createArc(currentAngle, currentAngle + meetToFAngle)}
+                                                fill="rgb(74, 222, 128)"
+                                                stroke="none"
+                                              />
+                                            )}
+                                            
+                                            {/* Red segment - Don't meet ToF Target */}
+                                            {notMeetToFCount > 0 && (
+                                              <path
+                                                d={createArc(currentAngle + meetToFAngle, currentAngle + meetToFAngle + notMeetToFAngle)}
+                                                fill="rgb(248, 113, 113)"
+                                                stroke="none"
+                                              />
+                                            )}
+                                          </>
+                                        );
+                                      })()}
+                                      
+                                      {/* Center circle for donut effect */}
+                                      <circle
+                                        cx="40"
+                                        cy="40"
+                                        r="24"
+                                        fill="white"
+                                        stroke="rgb(229, 231, 235)"
+                                        strokeWidth="2"
+                                      />
+                                    </svg>
+                                    
+                                    {/* Center text */}
+                                    <Box
+                                      position="absolute"
+                                      top="50%"
+                                      left="50%"
+                                      transform="translate(-50%, -50%)"
+                                      textAlign="center"
+                                    >
+                                      <Text fontSize="xs" fontWeight="bold" color="gray.700">
+                                        {tofPercent}%
+                                      </Text>
+                                      <Text fontSize="xs" color="gray.500">
+                                        {meetToF}/{areaData.length}
+                                      </Text>
+                                    </Box>
+                                  </Box>
                                 </VStack>
                               </Box>
                               
@@ -1239,12 +1318,91 @@ export default function SMG() {
                                   <Text fontSize="sm" color="gray.700" fontWeight="semibold">
                                     OSAT Target
                                   </Text>
-                                  <Text fontSize="xl" fontWeight="bold" color={meetOSAT > areaData.length / 2 ? "red.600" : "green.600"}>
-                                    {osatPercent}%
-                                  </Text>
-                                  <Text fontSize="xs" color="gray.500">
-                                    {meetOSAT}/{areaData.length} stores
-                                  </Text>
+                                  
+                                  {/* OSAT Donut Chart */}
+                                  <Box position="relative" w="80px" h="80px">
+                                    <svg width="80" height="80" viewBox="0 0 80 80">
+                                      {/* Calculate angles for OSAT */}
+                                      {(() => {
+                                        const totalStores = areaData.length;
+                                        const meetOSATCount = meetOSAT;
+                                        const notMeetOSATCount = totalStores - meetOSAT;
+                                        
+                                        const meetOSATAngle = (meetOSATCount / totalStores) * 360;
+                                        const notMeetOSATAngle = (notMeetOSATCount / totalStores) * 360;
+                                        
+                                        // SVG circle calculations
+                                        const radius = 32;
+                                        const centerX = 40;
+                                        const centerY = 40;
+                                        
+                                        // Helper function to create arc path
+                                        const createArc = (startAngle, endAngle) => {
+                                          const startRad = (startAngle - 90) * Math.PI / 180;
+                                          const endRad = (endAngle - 90) * Math.PI / 180;
+                                          
+                                          const x1 = centerX + radius * Math.cos(startRad);
+                                          const y1 = centerY + radius * Math.sin(startRad);
+                                          const x2 = centerX + radius * Math.cos(endRad);
+                                          const y2 = centerY + radius * Math.sin(endRad);
+                                          
+                                          const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+                                          
+                                          return `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} L ${centerX} ${centerY} Z`;
+                                        };
+                                        
+                                        let currentAngle = 0;
+                                        
+                                        return (
+                                          <>
+                                            {/* Green segment - Meet OSAT Target */}
+                                            {meetOSATCount > 0 && (
+                                              <path
+                                                d={createArc(currentAngle, currentAngle + meetOSATAngle)}
+                                                fill="rgb(74, 222, 128)"
+                                                stroke="none"
+                                              />
+                                            )}
+                                            
+                                            {/* Red segment - Don't meet OSAT Target */}
+                                            {notMeetOSATCount > 0 && (
+                                              <path
+                                                d={createArc(currentAngle + meetOSATAngle, currentAngle + meetOSATAngle + notMeetOSATAngle)}
+                                                fill="rgb(248, 113, 113)"
+                                                stroke="none"
+                                              />
+                                            )}
+                                          </>
+                                        );
+                                      })()}
+                                      
+                                      {/* Center circle for donut effect */}
+                                      <circle
+                                        cx="40"
+                                        cy="40"
+                                        r="24"
+                                        fill="white"
+                                        stroke="rgb(229, 231, 235)"
+                                        strokeWidth="2"
+                                      />
+                                    </svg>
+                                    
+                                    {/* Center text */}
+                                    <Box
+                                      position="absolute"
+                                      top="50%"
+                                      left="50%"
+                                      transform="translate(-50%, -50%)"
+                                      textAlign="center"
+                                    >
+                                      <Text fontSize="xs" fontWeight="bold" color="gray.700">
+                                        {osatPercent}%
+                                      </Text>
+                                      <Text fontSize="xs" color="gray.500">
+                                        {meetOSAT}/{areaData.length}
+                                      </Text>
+                                    </Box>
+                                  </Box>
                                 </VStack>
                               </Box>
                               
@@ -1259,12 +1417,94 @@ export default function SMG() {
                                   <Text fontSize="sm" color="gray.700" fontWeight="semibold">
                                     Average
                                   </Text>
-                                  <Text fontSize="xl" fontWeight="bold" color="blue.600">
-                                    {(((parseFloat(tofPercent) + parseFloat(osatPercent)) / 2)).toFixed(1)}%
-                                  </Text>
-                                  <Text fontSize="xs" color="gray.500">
-                                    Combined
-                                  </Text>
+                                  
+                                  {/* Average Donut Chart */}
+                                  <Box position="relative" w="80px" h="80px">
+                                    <svg width="80" height="80" viewBox="0 0 80 80">
+                                      {/* Calculate angles for Average */}
+                                      {(() => {
+                                        const totalStores = areaData.length;
+                                        const averagePercent = ((parseFloat(tofPercent) + parseFloat(osatPercent)) / 2);
+                                        
+                                        // Calculate how many stores meet the average target
+                                        // We'll use a threshold of 50% as the target
+                                        const targetThreshold = 50;
+                                        const meetAverageCount = Math.round((averagePercent / 100) * totalStores);
+                                        const notMeetAverageCount = totalStores - meetAverageCount;
+                                        
+                                        const meetAverageAngle = (meetAverageCount / totalStores) * 360;
+                                        const notMeetAverageAngle = (notMeetAverageCount / totalStores) * 360;
+                                        
+                                        // SVG circle calculations
+                                        const radius = 32;
+                                        const centerX = 40;
+                                        const centerY = 40;
+                                        
+                                        // Helper function to create arc path
+                                        const createArc = (startAngle, endAngle) => {
+                                          const startRad = (startAngle - 90) * Math.PI / 180;
+                                          const endRad = (endAngle - 90) * Math.PI / 180;
+                                          
+                                          const x1 = centerX + radius * Math.cos(startRad);
+                                          const y1 = centerY + radius * Math.sin(startRad);
+                                          const x2 = centerX + radius * Math.cos(endRad);
+                                          const y2 = centerY + radius * Math.sin(endRad);
+                                          
+                                          const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+                                          
+                                          return `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} L ${centerX} ${centerY} Z`;
+                                        };
+                                        
+                                        let currentAngle = 0;
+                                        
+                                        return (
+                                          <>
+                                            {/* Blue segment - Meet Average Target */}
+                                            {meetAverageCount > 0 && (
+                                              <path
+                                                d={createArc(currentAngle, currentAngle + meetAverageAngle)}
+                                                fill="rgb(59, 130, 246)"
+                                                stroke="none"
+                                              />
+                                            )}
+                                            
+                                            {/* Gray segment - Don't meet Average Target */}
+                                            {notMeetAverageCount > 0 && (
+                                              <path
+                                                d={createArc(currentAngle + meetAverageAngle, currentAngle + meetAverageAngle + notMeetAverageAngle)}
+                                                fill="rgb(156, 163, 175)"
+                                                stroke="none"
+                                              />
+                                            )}
+                                          </>
+                                        );
+                                      })()}
+                                      
+                                      {/* Center circle for donut effect */}
+                                      <circle
+                                        cx="40"
+                                        cy="40"
+                                        r="24"
+                                        fill="white"
+                                        stroke="rgb(229, 231, 235)"
+                                        strokeWidth="2"
+                                      />
+                                    </svg>
+                                    
+                                    {/* Center text */}
+                                    <Box
+                                      position="absolute"
+                                      top="50%"
+                                      left="50%"
+                                      transform="translate(-50%, -50%)"
+                                      textAlign="center"
+                                    >
+                                      <Text fontSize="xs" fontWeight="bold" color="gray.700">
+                                        {(((parseFloat(tofPercent) + parseFloat(osatPercent)) / 2)).toFixed(1)}%
+                                      </Text>
+                                   
+                                    </Box>
+                                  </Box>
                                 </VStack>
                               </Box>
                             </HStack>
