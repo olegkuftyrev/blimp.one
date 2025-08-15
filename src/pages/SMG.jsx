@@ -780,6 +780,7 @@ export default function SMG() {
                         textAlign="center"
                         borderRight="1px solid"
                         borderColor="gray.200"
+                        display={{ base: "none", md: "table-cell" }}
                       >
                         Meet ToF Target
                       </Table.ColumnHeader>
@@ -804,6 +805,7 @@ export default function SMG() {
                         textAlign="center"
                         borderRight="1px solid"
                         borderColor="gray.200"
+                        display={{ base: "none", md: "table-cell" }}
                       >
                         Meet OSAT Target
                       </Table.ColumnHeader>
@@ -814,6 +816,7 @@ export default function SMG() {
                         fontWeight="bold" 
                         color="gray.700" 
                         textAlign="center"
+                        display={{ base: "none", md: "table-cell" }}
                       >
                         % Meet OSAT
                       </Table.ColumnHeader>
@@ -900,6 +903,7 @@ export default function SMG() {
                             borderRight="1px solid"
                             borderColor="gray.200"
                             fontWeight="medium"
+                            display={{ base: "none", md: "table-cell" }}
                           >
                             {row.meetToF}
                           </Table.Cell>
@@ -921,6 +925,7 @@ export default function SMG() {
                             borderRight="1px solid"
                             borderColor="gray.200"
                             fontWeight="medium"
+                            display={{ base: "none", md: "table-cell" }}
                           >
                             {row.meetOSAT}
                           </Table.Cell>
@@ -1270,6 +1275,10 @@ export default function SMG() {
                                         index === 9 ? "80px" : "80px",
                                   md: "auto"
                                 }}
+                                display={index === 1 ? { base: "none", md: "table-cell" } : 
+                                         index === 5 ? { base: "none", md: "table-cell" } : 
+                                         index === 9 ? { base: "none", md: "table-cell" } : 
+                                         "table-cell"}
                               >
                                 {header}
                               </Table.ColumnHeader>
@@ -1315,6 +1324,7 @@ export default function SMG() {
                                 borderRight="1px solid"
                                 borderColor="gray.200"
                                 fontSize={{ base: "xs", md: "sm" }}
+                                display={{ base: "none", md: "table-cell" }}
                               >
                                 {row.storeName}
                               </Table.Cell>
@@ -1355,6 +1365,7 @@ export default function SMG() {
                                 borderRight="1px solid"
                                 borderColor="gray.200"
                                 fontSize={{ base: "xs", md: "sm" }}
+                                display={{ base: "none", md: "table-cell" }}
                               >
                                 {row.tofDifference?.toFixed(1) || ""}
                               </Table.Cell>
@@ -1365,7 +1376,6 @@ export default function SMG() {
                                 borderRight="1px solid"
                                 borderColor="gray.200"
                                 fontSize={{ base: "xs", md: "sm" }}
-                                bg={row.tofSurveysNeeded ? "red.50" : ""}
                               >
                                 {row.tofSurveysNeeded ? row.tofSurveysNeeded : `+${Math.abs(row.tofDifference).toFixed(1)}%`}
                               </Table.Cell>
@@ -1396,6 +1406,7 @@ export default function SMG() {
                                 borderRight="1px solid"
                                 borderColor="gray.200"
                                 fontSize={{ base: "xs", md: "sm" }}
+                                display={{ base: "none", md: "table-cell" }}
                               >
                                 {row.osatDifference?.toFixed(1) || ""}
                               </Table.Cell>
