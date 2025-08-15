@@ -284,6 +284,11 @@ export default function SMG() {
     }
   }
 
+  // Calculate region-wide metrics
+  const regionToF = data.length > 0 ? data.filter(row => row.tofDifference >= 0).length / data.length * 100 : 0;
+  const regionOSAT = data.length > 0 ? data.filter(row => row.osatDifference >= 0).length / data.length * 100 : 0;
+  const regionAvg = (regionToF + regionOSAT) / 2;
+
   // Smart report headers - matching your screenshot exactly
   const smartHeaders = [
     "Area",
@@ -463,371 +468,248 @@ export default function SMG() {
                 </HStack>
               </VStack>
               
-              {/* Gauge Charts Section */}
+              {/* Region Performance Overview */}
               <Box mb={6}>
                 <Text fontSize="lg" fontWeight="semibold" color="gray.700" mb={4} textAlign="center">
                   Region Performance Overview
                 </Text>
-                <Box display="flex" justifyContent="center">
-                  <VStack spacing={4} align="center">
-                    {/* Main Region Gauge Chart */}
-                    <Box position="relative" w="150px" h="150px">
-                      <svg width="150" height="150" viewBox="0 0 150 150">
-                        {/* Background circle */}
-                        <circle
-                          cx="75"
-                          cy="75"
-                          r="60"
-                          fill="none"
-                          stroke="rgb(229, 231, 235)"
-                          strokeWidth="12"
-                        />
-                        
-                        {/* Performance arc */}
-                        <circle
-                          cx="75"
-                          cy="75"
-                          r="60"
-                          fill="none"
-                          stroke={(() => {
-                            const regionToF = data.filter(row => row.tofDifference >= 0).length / data.length * 100;
-                            const regionOSAT = data.filter(row => row.osatDifference >= 0).length / data.length * 100;
-                            const regionAverage = (regionToF + regionOSAT) / 2;
-                            
-                            if (regionAverage >= 80) return "rgb(34, 197, 94)"; // Green
-                            if (regionAverage >= 60) return "rgb(251, 146, 60)"; // Orange
-                            if (regionAverage >= 40) return "rgb(245, 158, 11)"; // Yellow
-                            return "rgb(239, 68, 68)"; // Red
-                          })()}
-                          strokeWidth="12"
-                          strokeLinecap="round"
-                          transform="rotate(-90 75 75)"
-                          strokeDasharray={`${(() => {
-                            const regionToF = data.filter(row => row.tofDifference >= 0).length / data.length * 100;
-                            const regionOSAT = data.filter(row => row.osatDifference >= 0).length / data.length * 100;
-                            const regionAverage = (regionToF + regionOSAT) / 2;
-                            return (regionAverage / 100) * 377;
-                          })()} 377`}
-                        />
-                        
-                        {/* Center text */}
-                        <text
-                          x="75"
-                          y="70"
-                          textAnchor="middle"
-                          fontSize="24"
-                          fontWeight="bold"
-                          fill="rgb(55, 65, 81)"
+                <HStack align="center" spacing={6} w="100%">
+                  {/* Left Column - Gauge Chart and KPIs */}
+                  <Box flex="1" minW="300px">
+                    <VStack align="center" spacing={4}>
+                      {/* Region Average Gauge */}
+                      <Box position="relative" w="200px" h="200px">
+                        <svg width="200" height="200" viewBox="0 0 200 200">
+                          {/* Background circle */}
+                          <circle
+                            cx="100"
+                            cy="100"
+                            r="80"
+                            fill="none"
+                            stroke="#e2e8f0"
+                            strokeWidth="20"
+                          />
+                          {/* Performance arc */}
+                          <circle
+                            cx="100"
+                            cy="100"
+                            r="80"
+                            fill="none"
+                            stroke="#ef4444"
+                            strokeWidth="20"
+                            strokeDasharray={`${regionAvg * 5.03} 502.65`}
+                            strokeDashoffset="125.66"
+                            transform="rotate(-90 100 100)"
+                          />
+                        </svg>
+                        <Box
+                          position="absolute"
+                          top="50%"
+                          left="50%"
+                          transform="translate(-50%, -50%)"
+                          textAlign="center"
                         >
-                          {(() => {
-                            const regionToF = data.filter(row => row.tofDifference >= 0).length / data.length * 100;
-                            const regionOSAT = data.filter(row => row.osatDifference >= 0).length / data.length * 100;
-                            const regionAverage = (regionToF + regionOSAT) / 2;
-                            return regionAverage.toFixed(0);
-                          })()}%
-                        </text>
-                        <text
-                          x="75"
-                          y="90"
-                          textAnchor="middle"
-                          fontSize="14"
-                          fill="rgb(107, 114, 128)"
-                        >
-                          Region Avg
-                        </text>
-                      </svg>
-                    </Box>
-                    
-                    {/* Region Performance Details */}
-                    <HStack spacing={6} fontSize="sm">
-                      <VStack spacing={1} align="center">
-                        <Text color="gray.600" fontWeight="medium">
-                          Total Stores
-                        </Text>
-                        <Text fontSize="lg" fontWeight="bold" color="gray.800">
-                          {data.length}
-                        </Text>
-                      </VStack>
-                      
-                      <VStack spacing={1} align="center">
-                        <Text color="gray.600" fontWeight="medium">
-                          ToF Target
-                        </Text>
-                        <Text 
-                          fontSize="lg" 
-                          fontWeight="bold" 
-                          color={(() => {
-                            const regionToF = data.filter(row => row.tofDifference >= 0).length / data.length * 100;
-                            return regionToF >= 75 ? "green.600" : "red.600";
-                          })()}
-                        >
-                          {(() => {
-                            const regionToF = data.filter(row => row.tofDifference >= 0).length / data.length * 100;
-                            return regionToF.toFixed(1);
-                          })()}%
-                        </Text>
-                      </VStack>
-                      
-                      <VStack spacing={1} align="center">
-                        <Text color="gray.600" fontWeight="medium">
-                          OSAT Target
-                        </Text>
-                        <Text 
-                          fontSize="lg" 
-                          fontWeight="bold" 
-                          color={(() => {
-                            const regionOSAT = data.filter(row => row.osatDifference >= 0).length / data.length * 100;
-                            return regionOSAT >= 75 ? "green.600" : "red.600";
-                          })()}
-                        >
-                          {(() => {
-                            const regionOSAT = data.filter(row => row.osatDifference >= 0).length / data.length * 100;
-                            return regionOSAT.toFixed(1);
-                          })()}%
-                        </Text>
-                      </VStack>
-                    </HStack>
-                    
-                    {/* Additional Performance Insights */}
-                    <Box w="100%" mt={4}>
-                      <Grid 
-                        templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }}
-                        gap={{ base: 2, md: 3 }}
-                        w="100%"
-                      >
-                        {/* Top Performers */}
-                        <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
-                          <VStack align="start" spacing={2}>
-                            <HStack spacing={2} align="center">
-                              <Box w="3" h="3" bg="green.500" rounded="full" />
-                              <Text fontSize="sm" fontWeight="semibold" color="green.700">
-                                Top Performers
-                              </Text>
-                            </HStack>
-                            <Text fontSize="xs" color="green.600">
-                              {(() => {
-                                const topPerformers = data.filter(row => row.tofDifference >= 0 && row.osatDifference >= 0).length;
-                                return `${topPerformers} stores meeting both targets`;
-                              })()}
-                            </Text>
-                          </VStack>
-                        </Box>
-                        
-                        {/* Areas Needing Attention */}
-                        <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
-                          <VStack align="start" spacing={2}>
-                            <HStack spacing={2} align="center">
-                              <Box w="3" h="3" bg="red.500" rounded="full" />
-                              <Text fontSize="sm" fontWeight="semibold" color="red.700">
-                                Needs Attention
-                              </Text>
-                            </HStack>
-                            <Text fontSize="xs" color="red.600">
-                              {(() => {
-                                const needsAttention = data.filter(row => row.tofDifference < 0 && row.osatDifference < 0).length;
-                                return `${needsAttention} stores missing both targets`;
-                              })()}
-                            </Text>
-                          </VStack>
-                        </Box>
-                        
-                        {/* Performance Distribution */}
-                        <Box bg="blue.50" p={4} rounded="lg" borderWidth="1px" borderColor="blue.200">
-                          <VStack align="start" spacing={2}>
-                            <HStack spacing={2} align="center">
-                              <Box w="3" h="3" bg="blue.500" rounded="full" />
-                              <Text fontSize="sm" fontWeight="semibold" color="blue.700">
-                                Mixed Performance
-                              </Text>
-                            </HStack>
-                            <Text fontSize="xs" color="blue.600">
-                              {(() => {
-                                const mixed = data.filter(row => 
-                                  (row.tofDifference >= 0 && row.osatDifference < 0) || 
-                                  (row.tofDifference < 0 && row.osatDifference >= 0)
-                                ).length;
-                                return `${mixed} stores meeting one target`;
-                              })()}
-                            </Text>
-                          </VStack>
-                        </Box>
-                        
-                        {/* Improvement Opportunity */}
-                        <Box bg="orange.50" p={4} rounded="lg" borderWidth="1px" borderColor="orange.200">
-                          <VStack align="start" spacing={2}>
-                            <HStack spacing={2} align="center">
-                              <Box w="3" h="3" bg="orange.500" rounded="full" />
-                              <Text fontSize="sm" fontWeight="semibold" color="orange.700">
-                                Close to Target
-                              </Text>
-                            </HStack>
-                            <Text fontSize="xs" color="orange.600">
-                              {(() => {
-                                const closeToTarget = data.filter(row => 
-                                  (row.tofDifference >= -5 && row.tofDifference < 0) || 
-                                  (row.osatDifference >= -5 && row.osatDifference < 0)
-                                ).length;
-                                return `${closeToTarget} stores within 5% of target`;
-                              })()}
-                            </Text>
-                          </VStack>
-                        </Box>
-                      </Grid>
-                    </Box>
-                    
-                    {/* Additional Store Count Metrics */}
-                    <Box w="100%" mt={4}>
-                      <Grid 
-                        templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }}
-                        gap={{ base: 2, md: 3 }}
-                        w="100%"
-                      >
-                        {/* Meet ToF */}
-                        <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
-                          <VStack align="start" spacing={2}>
-                            <HStack spacing={2} align="center">
-                              <Box w="3" h="3" bg="green.500" rounded="full" />
-                              <Text fontSize="sm" fontWeight="semibold" color="green.700">
-                                Meet ToF
-                              </Text>
-                            </HStack>
-                            <Text fontSize="xs" color="green.600">
-                              {(() => {
-                                const meetToF = data.filter(row => row.tofDifference >= 0).length;
-                                return `${meetToF} stores`;
-                              })()}
-                            </Text>
-                          </VStack>
-                        </Box>
-                        
-                        {/* Meet OSAT */}
-                        <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
-                          <VStack align="start" spacing={2}>
-                            <HStack spacing={2} align="center">
-                              <Box w="3" h="3" bg="green.500" rounded="full" />
-                              <Text fontSize="sm" fontWeight="semibold" color="green.700">
-                                Meet OSAT
-                              </Text>
-                            </HStack>
-                            <Text fontSize="xs" color="green.600">
-                              {(() => {
-                                const meetOSAT = data.filter(row => row.osatDifference >= 0).length;
-                                return `${meetOSAT} stores`;
-                              })()}
-                            </Text>
-                          </VStack>
-                        </Box>
-                        
-                        {/* Didn't meet ToF */}
-                        <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
-                          <VStack align="start" spacing={2}>
-                            <HStack spacing={2} align="center">
-                              <Box w="3" h="3" bg="red.500" rounded="full" />
-                              <Text fontSize="sm" fontWeight="semibold" color="red.700">
-                                Didn't meet ToF
-                              </Text>
-                            </HStack>
-                            <Text fontSize="xs" color="red.600">
-                              {(() => {
-                                const didntMeetToF = data.filter(row => row.tofDifference < 0).length;
-                                return `${didntMeetToF} stores`;
-                              })()}
-                            </Text>
-                          </VStack>
-                        </Box>
-                        
-                        {/* Didn't meet OSAT */}
-                        <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
-                          <VStack align="start" spacing={2}>
-                            <HStack spacing={2} align="center">
-                              <Box w="3" h="3" bg="red.500" rounded="full" />
-                              <Text fontSize="sm" fontWeight="semibold" color="red.700">
-                                Didn't meet OSAT
-                              </Text>
-                            </HStack>
-                            <Text fontSize="xs" color="red.600">
-                              {(() => {
-                                const didntMeetOSAT = data.filter(row => row.osatDifference < 0).length;
-                                return `${didntMeetOSAT} stores`;
-                              })()}
-                            </Text>
-                          </VStack>
-                        </Box>
-                      </Grid>
-                    </Box>
-                    
-                    {/* Key Performance Indicators */}
-                    <Box w="100%" mt={4}>
-                      <Text fontSize="sm" fontWeight="semibold" color="gray.700" mb={3} textAlign="center">
-                        Key Performance Indicators
-                      </Text>
-                      <HStack spacing={4} justify="center" flexWrap="wrap">
-                        <VStack spacing={1} align="center" minW="70px">
-                          <Text fontSize="xs" color="gray.500" textAlign="center">
-                            Best Area
+                          <Text fontSize="2xl" fontWeight="bold" color="gray.800">
+                            {regionAvg.toFixed(1)}%
                           </Text>
-                          <Text fontSize="sm" fontWeight="bold" color="green.600">
-                            {(() => {
-                              const areaPerformance = Object.entries(STORE_AREAS).map(([areaName, storeNumbers]) => {
-                                const areaData = data.filter(row => 
-                                  storeNumbers.includes(String(row.storeNumber).replace(/^0+/, ''))
-                                );
-                                if (areaData.length === 0) return { areaName, avgPerformance: 0 };
-                                
-                                // Calculate average performance across both targets
-                                const totalPerformance = areaData.reduce((sum, row) => {
-                                  const tofPerformance = row.ptdTasteOfFood;
-                                  const osatPerformance = row.ptdOsat;
-                                  return sum + tofPerformance + osatPerformance;
-                                }, 0);
-                                
-                                const avgPerformance = totalPerformance / (areaData.length * 2);
-                                return { areaName, avgPerformance };
-                              });
-                              
-                              const bestArea = areaPerformance.reduce((best, current) => 
-                                current.avgPerformance > best.avgPerformance ? current : best
-                              );
-                              return bestArea.areaName;
-                            })()}
+                          <Text fontSize="sm" color="gray.600">
+                            Region Avg
+                          </Text>
+                        </Box>
+                      </Box>
+                      
+                      {/* Key Performance Indicators */}
+                      <HStack spacing={6} justify="center">
+                        <VStack spacing={1} align="center">
+                          <Text fontSize="sm" color="gray.500">Total Stores</Text>
+                          <Text fontSize="lg" fontWeight="bold" color="gray.800">
+                            {data.length}
                           </Text>
                         </VStack>
-                        
-                        <VStack spacing={1} align="center" minW="70px">
-                          <Text fontSize="xs" color="gray.500" textAlign="center">
-                            Priority Focus
+                        <VStack spacing={1} align="center">
+                          <Text fontSize="sm" color="gray.500">ToF Target</Text>
+                          <Text fontSize="lg" fontWeight="bold" color="red.600">
+                            {regionToF.toFixed(1)}%
                           </Text>
-                          <Text fontSize="sm" fontWeight="bold" color="red.600">
-                            {(() => {
-                              const areaPerformance = Object.entries(STORE_AREAS).map(([areaName, storeNumbers]) => {
-                                const areaData = data.filter(row => 
-                                  storeNumbers.includes(String(row.storeNumber).replace(/^0+/, ''))
-                                );
-                                if (areaData.length === 0) return { areaName, avgTargetPercentage: 0 };
-                                
-                                // Calculate percentage of stores meeting each target
-                                const meetToF = areaData.filter(row => row.tofDifference >= 0).length;
-                                const meetOSAT = areaData.filter(row => row.osatDifference >= 0).length;
-                                
-                                const tofPercentage = (meetToF / areaData.length) * 100;
-                                const osatPercentage = (meetOSAT / areaData.length) * 100;
-                                
-                                // Average of the two percentages
-                                const avgTargetPercentage = (tofPercentage + osatPercentage) / 2;
-                                return { areaName, avgTargetPercentage };
-                              });
-                              
-                              const priorityArea = areaPerformance.reduce((best, current) => 
-                                current.avgTargetPercentage < best.avgTargetPercentage ? current : best
-                              );
-                              return priorityArea.areaName;
-                            })()}
+                        </VStack>
+                        <VStack spacing={1} align="center">
+                          <Text fontSize="sm" color="gray.500">OSAT Target</Text>
+                          <Text fontSize="lg" fontWeight="bold" color="red.600">
+                            {regionOSAT.toFixed(1)}%
                           </Text>
                         </VStack>
                       </HStack>
-                    </Box>
-                  </VStack>
-                </Box>
+                    </VStack>
+                  </Box>
+                  
+                  {/* Right Column - Performance Insight Cards */}
+                  <Box flex="2" minW="600px">
+                    {/* First Row */}
+                    <Grid 
+                      templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }}
+                      gap={{ base: 2, md: 3 }}
+                      w="100%"
+                      mb={4}
+                    >
+                      {/* Top Performers */}
+                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
+                        <VStack align="start" spacing={2}>
+                          <HStack spacing={2} align="center">
+                            <Box w="3" h="3" bg="green.500" rounded="full" />
+                            <Text fontSize="sm" fontWeight="semibold" color="green.700">
+                              Top Performers
+                            </Text>
+                          </HStack>
+                          <Text fontSize="xs" color="green.600">
+                            {(() => {
+                              const topPerformers = data.filter(row => row.tofDifference >= 0 && row.osatDifference >= 0).length;
+                              return `${topPerformers} stores meeting both targets`;
+                            })()}
+                          </Text>
+                        </VStack>
+                      </Box>
+                      
+                      {/* Meet ToF */}
+                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
+                        <VStack align="start" spacing={2}>
+                          <HStack spacing={2} align="center">
+                            <Box w="3" h="3" bg="green.500" rounded="full" />
+                            <Text fontSize="sm" fontWeight="semibold" color="green.700">
+                              Meet ToF
+                            </Text>
+                          </HStack>
+                          <Text fontSize="xs" color="green.600">
+                            {(() => {
+                              const meetToF = data.filter(row => row.tofDifference >= 0).length;
+                              return `${meetToF} stores`;
+                            })()}
+                          </Text>
+                        </VStack>
+                      </Box>
+                      
+                      {/* Meet OSAT */}
+                      <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
+                        <VStack align="start" spacing={2}>
+                          <HStack spacing={2} align="center">
+                            <Box w="3" h="3" bg="green.500" rounded="full" />
+                            <Text fontSize="sm" fontWeight="semibold" color="green.700">
+                              Meet OSAT
+                            </Text>
+                          </HStack>
+                          <Text fontSize="xs" color="green.600">
+                            {(() => {
+                              const meetOSAT = data.filter(row => row.osatDifference >= 0).length;
+                              return `${meetOSAT} stores`;
+                            })()}
+                          </Text>
+                        </VStack>
+                      </Box>
+                      
+                      {/* Close to Target */}
+                      <Box bg="orange.50" p={4} rounded="lg" borderWidth="1px" borderColor="orange.200">
+                        <VStack align="start" spacing={2}>
+                          <HStack spacing={2} align="center">
+                            <Box w="3" h="3" bg="orange.500" rounded="full" />
+                            <Text fontSize="sm" fontWeight="semibold" color="orange.700">
+                              Close to Target
+                            </Text>
+                          </HStack>
+                          <Text fontSize="xs" color="orange.600">
+                            {(() => {
+                              const closeToTarget = data.filter(row => 
+                                (row.tofDifference >= -5 && row.tofDifference < 0) || 
+                                (row.osatDifference >= -5 && row.osatDifference < 0)
+                              ).length;
+                              return `${closeToTarget} stores within 5% of target`;
+                            })()}
+                          </Text>
+                        </VStack>
+                      </Box>
+                    </Grid>
+                    
+                    {/* Second Row */}
+                    <Grid 
+                      templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }}
+                      gap={{ base: 2, md: 3 }}
+                      w="100%"
+                    >
+                      {/* Needs Attention */}
+                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
+                        <VStack align="start" spacing={2}>
+                          <HStack spacing={2} align="center">
+                            <Box w="3" h="3" bg="red.500" rounded="full" />
+                            <Text fontSize="sm" fontWeight="semibold" color="red.700">
+                              Needs Attention
+                            </Text>
+                          </HStack>
+                          <Text fontSize="xs" color="red.600">
+                            {(() => {
+                              const needsAttention = data.filter(row => row.tofDifference < 0 && row.osatDifference < 0).length;
+                              return `${needsAttention} stores missing both targets`;
+                            })()}
+                          </Text>
+                        </VStack>
+                      </Box>
+                      
+                      {/* Didn't meet ToF */}
+                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
+                        <VStack align="start" spacing={2}>
+                          <HStack spacing={2} align="center">
+                            <Box w="3" h="3" bg="red.500" rounded="full" />
+                            <Text fontSize="sm" fontWeight="semibold" color="red.700">
+                              Didn't meet ToF
+                            </Text>
+                          </HStack>
+                          <Text fontSize="xs" color="red.600">
+                            {(() => {
+                              const didntMeetToF = data.filter(row => row.tofDifference < 0).length;
+                              return `${didntMeetToF} stores`;
+                            })()}
+                          </Text>
+                        </VStack>
+                      </Box>
+                      
+                      {/* Didn't meet OSAT */}
+                      <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
+                        <VStack align="start" spacing={2}>
+                          <HStack spacing={2} align="center">
+                            <Box w="3" h="3" bg="red.500" rounded="full" />
+                            <Text fontSize="sm" fontWeight="semibold" color="red.700">
+                              Didn't meet OSAT
+                            </Text>
+                          </HStack>
+                          <Text fontSize="xs" color="red.600">
+                            {(() => {
+                              const didntMeetOSAT = data.filter(row => row.osatDifference < 0).length;
+                              return `${didntMeetOSAT} stores`;
+                            })()}
+                          </Text>
+                        </VStack>
+                      </Box>
+                      
+                      {/* Mixed Performance */}
+                      <Box bg="blue.50" p={4} rounded="lg" borderWidth="1px" borderColor="blue.200">
+                        <VStack align="start" spacing={2}>
+                          <HStack spacing={2} align="center">
+                            <Box w="3" h="3" bg="blue.500" rounded="full" />
+                            <Text fontSize="sm" fontWeight="semibold" color="blue.700">
+                              Mixed Performance
+                            </Text>
+                          </HStack>
+                          <Text fontSize="xs" color="blue.600">
+                            {(() => {
+                              const mixed = data.filter(row => 
+                                (row.tofDifference >= 0 && row.osatDifference < 0) || 
+                                (row.tofDifference < 0 && row.osatDifference >= 0)
+                              ).length;
+                              return `${mixed} stores meeting one target`;
+                            })()}
+                          </Text>
+                        </VStack>
+                      </Box>
+                    </Grid>
+                  </Box>
+                </HStack>
               </Box>
               
               {/* Summary Table */}
