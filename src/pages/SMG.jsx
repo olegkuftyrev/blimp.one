@@ -742,6 +742,15 @@ export default function SMG() {
                     background: 'gray.400',
                     borderRadius: '4px',
                   },
+                  // Custom CSS to hide columns on mobile
+                  '@media (max-width: 768px)': {
+                    'th:nth-child(3), td:nth-child(3)': { // Meet ToF Target
+                      display: 'none !important',
+                    },
+                    'th:nth-child(6), td:nth-child(6)': { // Meet OSAT Target
+                      display: 'none !important',
+                    },
+                  },
                 }}
               >
                 <Table.Root size={{ base: "sm", md: "md" }} variant="simple">
@@ -771,6 +780,7 @@ export default function SMG() {
                       >
                         Store Count
                       </Table.ColumnHeader>
+                      {/* Hide Meet ToF Target on mobile */}
                       <Table.ColumnHeader 
                         py={4} 
                         px={6} 
@@ -796,6 +806,7 @@ export default function SMG() {
                       >
                         % Meet ToF
                       </Table.ColumnHeader>
+                      {/* Hide Meet OSAT Target on mobile */}
                       <Table.ColumnHeader 
                         py={4} 
                         px={6} 
@@ -816,7 +827,6 @@ export default function SMG() {
                         fontWeight="bold" 
                         color="gray.700" 
                         textAlign="center"
-                        display={{ base: "none", md: "table-cell" }}
                       >
                         % Meet OSAT
                       </Table.ColumnHeader>
@@ -896,6 +906,7 @@ export default function SMG() {
                           >
                             {row.storeCount}
                           </Table.Cell>
+                          {/* Hide Meet ToF Target on mobile */}
                           <Table.Cell 
                             py={4} 
                             px={6} 
@@ -918,6 +929,7 @@ export default function SMG() {
                           >
                             {row.meetToFPercent}%
                           </Table.Cell>
+                          {/* Hide Meet OSAT Target on mobile */}
                           <Table.Cell 
                             py={4} 
                             px={6} 
@@ -1245,6 +1257,18 @@ export default function SMG() {
                       '&::-webkit-scrollbar-thumb': {
                         background: 'gray.400',
                         borderRadius: '4px',
+                      },
+                      // Custom CSS to hide columns on mobile
+                      '@media (max-width: 768px)': {
+                        'th:nth-child(2), td:nth-child(2)': { // Store Name
+                          display: 'none !important',
+                        },
+                        'th:nth-child(6), td:nth-child(6)': { // PTD ToF vs 2025 Target
+                          display: 'none !important',
+                        },
+                        'th:nth-child(10), td:nth-child(10)': { // PTD OSAT vs 2025 Target
+                          display: 'none !important',
+                        },
                       },
                     }}
                   >
