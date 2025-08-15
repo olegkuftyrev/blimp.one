@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Landing from "./pages/Landing";
 import LandingSecret from "./pages/LandingSecret";
 import JobTitleStep from "./pages/IDP/JobTitleStep";
-import FocusStep from "./pages/IDP/FocusStep";
+
 import CompetencyQuestions from "./pages/IDP/CompetencyQuestions"
 import Results from "./pages/IDP/Results"
 import PL from "./pages/PL";
@@ -21,7 +21,7 @@ function AppWrapper() {
         <Route path="/" element={<Landing />} />
         <Route path="/secret" element={<LandingSecret />} />
         <Route path="/idp" element={<JobTitleStep />} />
-        <Route path="/idp/focus" element={<FocusStep />} />
+
         <Route path="/pl" element={<PL />} />
         <Route path="/smg" element={<SMG />} />
         <Route path="/plstudy" element={<PLstudy />} />

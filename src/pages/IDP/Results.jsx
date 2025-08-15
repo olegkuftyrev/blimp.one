@@ -21,25 +21,13 @@ export default function Results() {
   const {
     jobTitleId,
     setCompetencyScores,
-    focusSkills,
-    setFocusSkill,
     setJobTitle,
     competencyScores,
   } = useAppStore();
 
   const role = roles.find((r) => r.label === jobTitleId) || null;
-  const allSkills = role?.skills ?? [];
 
-  // Filter skills by chosen categories
-  const studySkills = focusSkills.study
-    ? allSkills.filter((s) => s.learningStyle === "study")
-    : [];
-  const practiceSkills = focusSkills.practice
-    ? allSkills.filter((s) => s.learningStyle === "practice")
-    : [];
-  const mentorshipSkills = focusSkills.mentorship
-    ? allSkills.filter((s) => s.learningStyle === "mentorship")
-    : [];
+  // We're always focusing on competencies, so all competencies will be shown based on their scores
 
   // Split competencies into recommended (score < 4) and others (score >= 4)
   const recommended = role
@@ -52,10 +40,6 @@ export default function Results() {
   const handleStartOver = () => {
     setJobTitle(null);
     setCompetencyScores({});
-    setFocusSkill("competency", false);
-    setFocusSkill("study", false);
-    setFocusSkill("practice", false);
-    setFocusSkill("mentorship", false);
     navigate("/idp");
   };
 
@@ -107,67 +91,6 @@ export default function Results() {
             </Box>
           )}
 
-          {/* Grouped Skills Cards */}
-          {studySkills.length > 0 && (
-            <Box bg="white" rounded="md" shadow="md" p={4}>
-              <Text fontWeight="bold" mb={2}>
-                Study Skills
-              </Text>
-              <Stack spacing={2}>
-                {studySkills.map((s) => (
-                  <Flex key={s.id} w="100%">
-                    <Box w="50%">{s.label}</Box>
-                    <Box w="50%">
-                      <Link href={s.reference} color="teal.500" isExternal>
-                        {s.reference}
-                      </Link>
-                    </Box>
-                  </Flex>
-                ))}
-              </Stack>
-            </Box>
-          )}
-
-          {practiceSkills.length > 0 && (
-            <Box bg="white" rounded="md" shadow="md" p={4}>
-              <Text fontWeight="bold" mb={2}>
-                Practice Skills
-              </Text>
-              <Stack spacing={2}>
-                {practiceSkills.map((s) => (
-                  <Flex key={s.id} w="100%">
-                    <Box w="50%">{s.label}</Box>
-                    <Box w="50%">
-                      <Link href={s.reference} color="teal.500" isExternal>
-                        {s.reference}
-                      </Link>
-                    </Box>
-                  </Flex>
-                ))}
-              </Stack>
-            </Box>
-          )}
-
-          {mentorshipSkills.length > 0 && (
-            <Box bg="white" rounded="md" shadow="md" p={4}>
-              <Text fontWeight="bold" mb={2}>
-                Mentorship Skills
-              </Text>
-              <Stack spacing={2}>
-                {mentorshipSkills.map((s) => (
-                  <Flex key={s.id} w="100%">
-                    <Box w="50%">{s.label}</Box>
-                    <Box w="50%">
-                      <Link href={s.reference} color="teal.500" isExternal>
-                        {s.reference}
-                      </Link>
-                    </Box>
-                  </Flex>
-                ))}
-              </Stack>
-            </Box>
-          )}
-
           {/* Buttons */}
           <HStack justify="space-between">
             <ActionNav
@@ -176,7 +99,7 @@ export default function Results() {
               showNext={true}
               backLabel="Back"
               nextLabel="Start Over"
-              onBack={() => navigate("/idp/focus")}
+              onBack={() => navigate("/idp")}
               onNext={handleStartOver}
               isNextDisabled={false}
             />

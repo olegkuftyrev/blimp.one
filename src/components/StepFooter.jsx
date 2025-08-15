@@ -8,7 +8,7 @@ export default function StepFooter() {
   const { currentStep, nextStep, prevStep } = useAppStore();
 
   // Простейшая схема маршрутов по шагам:
-  const routes = ["/idp", "/idp/focus", "/pl"];
+  const routes = ["/idp", "/pl"];
   const maxIndex = routes.length - 1;
 
   const handleNext = () => {

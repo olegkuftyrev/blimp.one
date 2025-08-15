@@ -42,7 +42,7 @@ export default function JobTitleStep() {
 
   const handleContinue = () => {
     if (!isDisabled) {
-      navigate("/idp/focus");
+      navigate("/idp/questions");
     }
   };
 

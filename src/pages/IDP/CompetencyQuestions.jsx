@@ -146,7 +146,7 @@ export default function CompetencyQuestions() {
                                 open={true}
                                 showBack={true}
                                 showNext={true}
-                                onBack={() => navigate("/idp/focus")}
+                                onBack={() => navigate("/idp")}
                                 onNext={handleSubmit}
                                 isNextDisabled={false}
                             />

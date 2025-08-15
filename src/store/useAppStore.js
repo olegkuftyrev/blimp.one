@@ -25,17 +25,7 @@ export const useAppStore = create((set, get) => ({
   competencyScores: {},
   setCompetencyScores: (scores) => set({ competencyScores: scores }),
 
-  /* выбранные карточки Focus */
-  focusSkills: {
-    competency: false,
-    study: false,
-    practice: false,
-    mentorship: false,
-  },
-  setFocusSkill: (skill, value) =>
-    set((s) => ({
-      focusSkills: { ...s.focusSkills, [skill]: value },
-    })),
+
 
   /* ───────────── P&L DASHBOARD ───────────── */
   /** «Сырые» строки Excel (sheet_to_json range) */
