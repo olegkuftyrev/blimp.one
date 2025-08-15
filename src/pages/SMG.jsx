@@ -1515,39 +1515,28 @@ export default function SMG() {
                   })()}
                     
                     {/* Table Container */}
-                    <Box 
-                    overflow="auto" 
-                    borderWidth="1px" 
-                    borderColor="gray.200"
-                    rounded="lg"
-                    shadow="sm"
-                    bg="white"
-                    sx={{
-                      '&::-webkit-scrollbar': {
-                        height: '8px',
-                      },
-                      '&::-webkit-scrollbar-track': {
-                        background: 'gray.100',
-                        borderRadius: '4px',
-                      },
-                      '&::-webkit-scrollbar-thumb': {
-                        background: 'gray.400',
-                        borderRadius: '4px',
-                      },
-                      // Custom CSS to hide columns on mobile
-                      '@media (max-width: 768px)': {
-                        'th:nth-child(2), td:nth-child(2)': { // Store Name
-                          display: 'none !important',
+                                        <Box 
+                      display={{ base: "none", md: "block" }}
+                      overflow="auto" 
+                      borderWidth="1px" 
+                      borderColor="gray.200"
+                      rounded="lg"
+                      shadow="sm"
+                      bg="white"
+                      sx={{
+                        '&::-webkit-scrollbar': {
+                          height: '8px',
                         },
-                        'th:nth-child(6), td:nth-child(6)': { // PTD ToF vs 2025 Target
-                          display: 'none !important',
+                        '&::-webkit-scrollbar-track': {
+                          background: 'gray.100',
+                          borderRadius: '4px',
                         },
-                        'th:nth-child(10), td:nth-child(10)': { // PTD OSAT vs 2025 Target
-                          display: 'none !important',
+                        '&::-webkit-scrollbar-thumb': {
+                          background: 'gray.400',
+                          borderRadius: '4px',
                         },
-                      },
-                    }}
-                  >
+                      }}
+                    >
                     <Table.Root size={{ base: "xs", md: "sm" }} variant="simple">
                       <Table.Header>
                         <Table.Row bg="gray.50" borderBottom="2px" borderColor="gray.200">
@@ -1717,6 +1706,203 @@ export default function SMG() {
                                 borderRight="1px solid"
                                 borderColor="gray.200"
                                 fontSize={{ base: "xs", md: "sm" }}
+                                bg={row.osatSurveysNeeded ? "red.50" : ""}
+                              >
+                                {row.osatSurveysNeeded ? row.osatSurveysNeeded : `+${Math.abs(row.osatDifference).toFixed(1)}%`}
+                              </Table.Cell>
+                            </Table.Row>
+                          ))}
+                        </Table.Body>
+                      </Table.Root>
+                    </Box>
+                    
+                    {/* Mobile Table */}
+                    <Box 
+                      display={{ base: "block", md: "none" }}
+                      overflow="auto" 
+                      borderWidth="1px" 
+                      borderColor="gray.200"
+                      rounded="lg"
+                      shadow="sm"
+                      bg="white"
+                      mt={4}
+                      sx={{
+                        '&::-webkit-scrollbar': {
+                          height: '8px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                          background: 'gray.100',
+                          borderRadius: '4px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          background: 'gray.400',
+                          borderRadius: '4px',
+                        },
+                      }}
+                    >
+                      <Table.Root size="xs" variant="simple">
+                        <Table.Header>
+                          <Table.Row bg="gray.50" borderBottom="2px" borderColor="gray.200">
+                            <Table.ColumnHeader 
+                              py={2}
+                              px={2}
+                              fontSize="xs"
+                              fontWeight="semibold"
+                              color="gray.700"
+                              textAlign="center"
+                              borderRight="1px solid"
+                              borderColor="gray.200"
+                              minW="80px"
+                            >
+                              Store #
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader 
+                              py={2}
+                              px={2}
+                              fontSize="xs"
+                              fontWeight="semibold"
+                              color="gray.700"
+                              textAlign="center"
+                              borderRight="1px solid"
+                              borderColor="gray.200"
+                              minW="70px"
+                            >
+                              Surveys
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader 
+                              py={2}
+                              px={2}
+                              fontSize="xs"
+                              fontWeight="semibold"
+                              color="gray.700"
+                              textAlign="center"
+                              borderRight="1px solid"
+                              borderColor="gray.200"
+                              minW="80px"
+                            >
+                              ToF Target
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader 
+                              py={2}
+                              px={2}
+                              fontSize="xs"
+                              fontWeight="semibold"
+                              color="gray.700"
+                              textAlign="center"
+                              borderRight="1px solid"
+                              borderColor="gray.200"
+                              minW="80px"
+                            >
+                              OSAT Target
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader 
+                              py={2}
+                              px={2}
+                              fontSize="xs"
+                              fontWeight="semibold"
+                              color="gray.700"
+                              textAlign="center"
+                              borderRight="1px solid"
+                              borderColor="gray.200"
+                              minW="80px"
+                            >
+                              # Highly Satisfied Surveys To Meet ToF
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader 
+                              py={2}
+                              px={2}
+                              fontSize="xs"
+                              fontWeight="semibold"
+                              color="gray.700"
+                              textAlign="center"
+                              borderRight="1px solid"
+                              borderColor="gray.200"
+                              minW="80px"
+                            >
+                              # Highly Satisfied Surveys To Meet OSAT
+                            </Table.ColumnHeader>
+                          </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                          {sortedAreaData.map((row, rowIndex) => (
+                            <Table.Row 
+                              key={rowIndex}
+                              _hover={{ bg: "gray.50" }}
+                              borderBottom="1px"
+                              borderColor="gray.100"
+                            >
+                              <Table.Cell 
+                                py={2} 
+                                px={2} 
+                                fontWeight="medium"
+                                textAlign="center"
+                                borderRight="1px solid"
+                                borderColor="gray.200"
+                                fontSize="xs"
+                                bg={(() => {
+                                  // Check if store meets both targets
+                                  const meetsToF = row.tofDifference >= 0;
+                                  const meetsOSAT = row.osatDifference >= 0;
+                                  
+                                  if (meetsToF && meetsOSAT) {
+                                    return "green.50"; // Both targets met - green
+                                  } else if (!meetsToF && !meetsOSAT) {
+                                    return "red.50"; // Neither target met - red
+                                  } else {
+                                    return "orange.50"; // At least one target met - orange
+                                  }
+                                })()}
+                              >
+                                {row.storeNumber}
+                              </Table.Cell>
+                              <Table.Cell 
+                                py={2} 
+                                px={2} 
+                                textAlign="center"
+                                borderRight="1px solid"
+                                borderColor="gray.200"
+                                fontSize="xs"
+                              >
+                                {row.count}
+                              </Table.Cell>
+                              <Table.Cell 
+                                py={2} 
+                                px={2} 
+                                textAlign="center"
+                                borderRight="1px solid"
+                                borderColor="gray.200"
+                                fontSize="xs"
+                              >
+                                {`${row.ptdTasteOfFood?.toFixed(1) || ""}/${row.tofTarget?.toFixed(1) || ""}`}
+                              </Table.Cell>
+                              <Table.Cell 
+                                py={2} 
+                                px={2} 
+                                textAlign="center"
+                                borderRight="1px solid"
+                                borderColor="gray.200"
+                                fontSize="xs"
+                                bg={row.osatSurveysNeeded ? "red.50" : ""}
+                              >
+                                {`${row.ptdOsat?.toFixed(1) || ""}/${row.osatTarget?.toFixed(1) || ""}`}
+                              </Table.Cell>
+                              <Table.Cell 
+                                py={2} 
+                                px={2} 
+                                textAlign="center"
+                                borderRight="1px solid"
+                                borderColor="gray.200"
+                                fontSize="xs"
+                              >
+                                {row.tofSurveysNeeded ? row.tofSurveysNeeded : `+${Math.abs(row.tofDifference).toFixed(1)}%`}
+                              </Table.Cell>
+                              <Table.Cell 
+                                py={2} 
+                                px={2} 
+                                textAlign="center"
+                                borderRight="1px solid"
+                                borderColor="gray.200"
+                                fontSize="xs"
                                 bg={row.osatSurveysNeeded ? "red.50" : ""}
                               >
                                 {row.osatSurveysNeeded ? row.osatSurveysNeeded : `+${Math.abs(row.osatDifference).toFixed(1)}%`}
