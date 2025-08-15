@@ -1,6 +1,6 @@
 // src/pages/SMG.jsx
 import React, { useState } from "react";
-import { Box, Text, Input, Table, VStack } from "@chakra-ui/react";
+import { Box, Text, Input, Table, VStack, HStack, Grid, Button, Tooltip } from "@chakra-ui/react";
 import * as XLSX from "xlsx";
 
 // Helper functions for calculations
@@ -303,41 +303,541 @@ export default function SMG() {
   return (
     <Box p={{ base: 2, md: 4 }} mx="auto" maxW="100vw">
       <VStack align="stretch" spacing={{ base: 3, md: 4 }}>
-        <Box as="fieldset" border="none">
-          <Text as="legend" fontSize={{ base: "sm", md: "md" }} mb={2}>
-            Upload Excel file (.xlsx) to generate smart report
-          </Text>
-          <Input
-            type="file"
-            accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
-            onChange={handleFileUpload}
-            size={{ base: "sm", md: "md" }}
+        {/* File Upload Section */}
+        <Box
+          w="100%"
+          bg="white"
+          p={8}
+          rounded="2xl"
+          shadow="lg"
+          borderWidth="2px"
+          borderColor="blue.200"
+          borderStyle="dashed"
+          textAlign="center"
+          position="relative"
+          overflow="hidden"
+          _hover={{
+            borderColor: "blue.300",
+            transform: "translateY(-2px)",
+            shadow: "xl"
+          }}
+          transition="all 0.3s ease"
+        >
+          {/* Background accent */}
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            right="0"
+            h="6px"
+            bgGradient="linear(to-r, blue.500, purple.600)"
           />
-          {err && <Text color="red.500" fontSize="sm" mt={2}>{err}</Text>}
+          
+          {/* Upload Icon */}
+          <Box mb={6}>
+            <Box
+              w="20"
+              h="20"
+              mx="auto"
+              bg="blue.50"
+              rounded="full"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              mb={4}
+            >
+              <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+            </Box>
+          </Box>
+          
+          {/* Upload Text */}
+          <VStack spacing={3}>
+            <Text fontSize="2xl" fontWeight="bold" color="gray.800">
+              {data.length > 0 ? "Re-Upload your file" : "Upload Your Excel File"}
+            </Text>
+            <Text fontSize="md" color="gray.600" maxW="400px">
+              {data.length > 0 
+                ? "Upload a new file to replace the current data"
+                : "Drag and drop your .xls file here, or click to browse and select your file"
+              }
+            </Text>
+          </VStack>
+          
+          {/* File Input */}
+          <Box position="relative">
+            <Input
+              type="file"
+              accept=".xls,.xlsx"
+              onChange={handleFileUpload}
+              position="absolute"
+              top="0"
+              left="0"
+              w="100%"
+              h="100%"
+              opacity="0"
+              cursor="pointer"
+              zIndex="1"
+            />
+            <Button
+              size="lg"
+              colorScheme="blue"
+              variant="solid"
+              px={8}
+              py={4}
+              fontSize="md"
+              fontWeight="semibold"
+              rounded="xl"
+              shadow="md"
+              _hover={{
+                transform: "translateY(-2px)",
+                shadow: "lg"
+              }}
+              transition="all 0.2s"
+            >
+              Choose File
+            </Button>
+          </Box>
+          
+          {/* File Type Info */}
+          <HStack spacing={2} color="gray.500" fontSize="sm">
+            <Box w="2" h="2" bg="blue.400" rounded="full" />
+            <Text>Supports .xls and .xlsx files</Text>
+          </HStack>
         </Box>
 
         {data.length > 0 && (
           <VStack spacing={{ base: 4, md: 6 }} align="stretch">
-            {/* Summary Table - Mobile Optimized */}
-            <Box>
-              <Text 
-                fontSize={{ base: "lg", md: "xl" }} 
-                fontWeight="bold" 
-                color="gray.700" 
-                mb={3}
-                pl={2}
-                borderLeft="4px solid"
-                borderColor="gray.500"
-              >
-                Performance Summary by Area
-              </Text>
+            {/* Performance Summary by Area */}
+            <Box 
+              bg="white" 
+              p={6} 
+              rounded="2xl" 
+              shadow="lg" 
+              borderWidth="1px" 
+              borderColor="blue.100"
+              mb={8}
+              position="relative"
+              overflow="hidden"
+            >
+              {/* Background accent */}
+              <Box
+                position="absolute"
+                top="0"
+                left="0"
+                right="0"
+                h="6px"
+                bgGradient="linear(to-r, blue.500, purple.600)"
+              />
+              
+              {/* Header Section */}
+              <VStack align="center" spacing={4} mb={6}>
+                <HStack spacing={3} align="center">
+                  <Box
+                    w="16px"
+                    h="16px"
+                    rounded="full"
+                    bgGradient="linear(to-r, blue.500, purple.600)"
+                    flexShrink={0}
+                  />
+                  <VStack align="center" spacing={1}>
+                    <Text
+                      fontSize={{ base: "2xl", md: "3xl" }}
+                      fontWeight="800"
+                      color="gray.800"
+                      letterSpacing="tight"
+                      textAlign="center"
+                    >
+                      Performance Summary by Area
+                    </Text>
+                    <Text
+                      fontSize="sm"
+                      color="gray.500"
+                      fontWeight="500"
+                      textAlign="center"
+                    >
+                      Overview of target achievement across all store areas
+                    </Text>
+                  </VStack>
+                </HStack>
+              </VStack>
+              
+              {/* Gauge Charts Section */}
+              <Box mb={6}>
+                <Text fontSize="lg" fontWeight="semibold" color="gray.700" mb={4} textAlign="center">
+                  Region Performance Overview
+                </Text>
+                <Box display="flex" justifyContent="center">
+                  <VStack spacing={4} align="center">
+                    {/* Main Region Gauge Chart */}
+                    <Box position="relative" w="150px" h="150px">
+                      <svg width="150" height="150" viewBox="0 0 150 150">
+                        {/* Background circle */}
+                        <circle
+                          cx="75"
+                          cy="75"
+                          r="60"
+                          fill="none"
+                          stroke="rgb(229, 231, 235)"
+                          strokeWidth="12"
+                        />
+                        
+                        {/* Performance arc */}
+                        <circle
+                          cx="75"
+                          cy="75"
+                          r="60"
+                          fill="none"
+                          stroke={(() => {
+                            const regionToF = data.filter(row => row.tofDifference >= 0).length / data.length * 100;
+                            const regionOSAT = data.filter(row => row.osatDifference >= 0).length / data.length * 100;
+                            const regionAverage = (regionToF + regionOSAT) / 2;
+                            
+                            if (regionAverage >= 80) return "rgb(34, 197, 94)"; // Green
+                            if (regionAverage >= 60) return "rgb(251, 146, 60)"; // Orange
+                            if (regionAverage >= 40) return "rgb(245, 158, 11)"; // Yellow
+                            return "rgb(239, 68, 68)"; // Red
+                          })()}
+                          strokeWidth="12"
+                          strokeLinecap="round"
+                          transform="rotate(-90 75 75)"
+                          strokeDasharray={`${(() => {
+                            const regionToF = data.filter(row => row.tofDifference >= 0).length / data.length * 100;
+                            const regionOSAT = data.filter(row => row.osatDifference >= 0).length / data.length * 100;
+                            const regionAverage = (regionToF + regionOSAT) / 2;
+                            return (regionAverage / 100) * 377;
+                          })()} 377`}
+                        />
+                        
+                        {/* Center text */}
+                        <text
+                          x="75"
+                          y="70"
+                          textAnchor="middle"
+                          fontSize="24"
+                          fontWeight="bold"
+                          fill="rgb(55, 65, 81)"
+                        >
+                          {(() => {
+                            const regionToF = data.filter(row => row.tofDifference >= 0).length / data.length * 100;
+                            const regionOSAT = data.filter(row => row.osatDifference >= 0).length / data.length * 100;
+                            const regionAverage = (regionToF + regionOSAT) / 2;
+                            return regionAverage.toFixed(0);
+                          })()}%
+                        </text>
+                        <text
+                          x="75"
+                          y="90"
+                          textAnchor="middle"
+                          fontSize="14"
+                          fill="rgb(107, 114, 128)"
+                        >
+                          Region Avg
+                        </text>
+                      </svg>
+                    </Box>
+                    
+                    {/* Region Performance Details */}
+                    <HStack spacing={6} fontSize="sm">
+                      <VStack spacing={1} align="center">
+                        <Text color="gray.600" fontWeight="medium">
+                          Total Stores
+                        </Text>
+                        <Text fontSize="lg" fontWeight="bold" color="gray.800">
+                          {data.length}
+                        </Text>
+                      </VStack>
+                      
+                      <VStack spacing={1} align="center">
+                        <Text color="gray.600" fontWeight="medium">
+                          ToF Target
+                        </Text>
+                        <Text 
+                          fontSize="lg" 
+                          fontWeight="bold" 
+                          color={(() => {
+                            const regionToF = data.filter(row => row.tofDifference >= 0).length / data.length * 100;
+                            return regionToF >= 75 ? "green.600" : "red.600";
+                          })()}
+                        >
+                          {(() => {
+                            const regionToF = data.filter(row => row.tofDifference >= 0).length / data.length * 100;
+                            return regionToF.toFixed(1);
+                          })()}%
+                        </Text>
+                      </VStack>
+                      
+                      <VStack spacing={1} align="center">
+                        <Text color="gray.600" fontWeight="medium">
+                          OSAT Target
+                        </Text>
+                        <Text 
+                          fontSize="lg" 
+                          fontWeight="bold" 
+                          color={(() => {
+                            const regionOSAT = data.filter(row => row.osatDifference >= 0).length / data.length * 100;
+                            return regionOSAT >= 75 ? "green.600" : "red.600";
+                          })()}
+                        >
+                          {(() => {
+                            const regionOSAT = data.filter(row => row.osatDifference >= 0).length / data.length * 100;
+                            return regionOSAT.toFixed(1);
+                          })()}%
+                        </Text>
+                      </VStack>
+                    </HStack>
+                    
+                    {/* Additional Performance Insights */}
+                    <Box w="100%" mt={4}>
+                      <Grid 
+                        templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }}
+                        gap={{ base: 2, md: 3 }}
+                        w="100%"
+                      >
+                        {/* Top Performers */}
+                        <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
+                          <VStack align="start" spacing={2}>
+                            <HStack spacing={2} align="center">
+                              <Box w="3" h="3" bg="green.500" rounded="full" />
+                              <Text fontSize="sm" fontWeight="semibold" color="green.700">
+                                Top Performers
+                              </Text>
+                            </HStack>
+                            <Text fontSize="xs" color="green.600">
+                              {(() => {
+                                const topPerformers = data.filter(row => row.tofDifference >= 0 && row.osatDifference >= 0).length;
+                                return `${topPerformers} stores meeting both targets`;
+                              })()}
+                            </Text>
+                          </VStack>
+                        </Box>
+                        
+                        {/* Areas Needing Attention */}
+                        <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
+                          <VStack align="start" spacing={2}>
+                            <HStack spacing={2} align="center">
+                              <Box w="3" h="3" bg="red.500" rounded="full" />
+                              <Text fontSize="sm" fontWeight="semibold" color="red.700">
+                                Needs Attention
+                              </Text>
+                            </HStack>
+                            <Text fontSize="xs" color="red.600">
+                              {(() => {
+                                const needsAttention = data.filter(row => row.tofDifference < 0 && row.osatDifference < 0).length;
+                                return `${needsAttention} stores missing both targets`;
+                              })()}
+                            </Text>
+                          </VStack>
+                        </Box>
+                        
+                        {/* Performance Distribution */}
+                        <Box bg="blue.50" p={4} rounded="lg" borderWidth="1px" borderColor="blue.200">
+                          <VStack align="start" spacing={2}>
+                            <HStack spacing={2} align="center">
+                              <Box w="3" h="3" bg="blue.500" rounded="full" />
+                              <Text fontSize="sm" fontWeight="semibold" color="blue.700">
+                                Mixed Performance
+                              </Text>
+                            </HStack>
+                            <Text fontSize="xs" color="blue.600">
+                              {(() => {
+                                const mixed = data.filter(row => 
+                                  (row.tofDifference >= 0 && row.osatDifference < 0) || 
+                                  (row.tofDifference < 0 && row.osatDifference >= 0)
+                                ).length;
+                                return `${mixed} stores meeting one target`;
+                              })()}
+                            </Text>
+                          </VStack>
+                        </Box>
+                        
+                        {/* Improvement Opportunity */}
+                        <Box bg="orange.50" p={4} rounded="lg" borderWidth="1px" borderColor="orange.200">
+                          <VStack align="start" spacing={2}>
+                            <HStack spacing={2} align="center">
+                              <Box w="3" h="3" bg="orange.500" rounded="full" />
+                              <Text fontSize="sm" fontWeight="semibold" color="orange.700">
+                                Close to Target
+                              </Text>
+                            </HStack>
+                            <Text fontSize="xs" color="orange.600">
+                              {(() => {
+                                const closeToTarget = data.filter(row => 
+                                  (row.tofDifference >= -5 && row.tofDifference < 0) || 
+                                  (row.osatDifference >= -5 && row.osatDifference < 0)
+                                ).length;
+                                return `${closeToTarget} stores within 5% of target`;
+                              })()}
+                            </Text>
+                          </VStack>
+                        </Box>
+                      </Grid>
+                    </Box>
+                    
+                    {/* Additional Store Count Metrics */}
+                    <Box w="100%" mt={4}>
+                      <Grid 
+                        templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }}
+                        gap={{ base: 2, md: 3 }}
+                        w="100%"
+                      >
+                        {/* Meet ToF */}
+                        <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
+                          <VStack align="start" spacing={2}>
+                            <HStack spacing={2} align="center">
+                              <Box w="3" h="3" bg="green.500" rounded="full" />
+                              <Text fontSize="sm" fontWeight="semibold" color="green.700">
+                                Meet ToF
+                              </Text>
+                            </HStack>
+                            <Text fontSize="xs" color="green.600">
+                              {(() => {
+                                const meetToF = data.filter(row => row.tofDifference >= 0).length;
+                                return `${meetToF} stores`;
+                              })()}
+                            </Text>
+                          </VStack>
+                        </Box>
+                        
+                        {/* Meet OSAT */}
+                        <Box bg="green.50" p={4} rounded="lg" borderWidth="1px" borderColor="green.200">
+                          <VStack align="start" spacing={2}>
+                            <HStack spacing={2} align="center">
+                              <Box w="3" h="3" bg="green.500" rounded="full" />
+                              <Text fontSize="sm" fontWeight="semibold" color="green.700">
+                                Meet OSAT
+                              </Text>
+                            </HStack>
+                            <Text fontSize="xs" color="green.600">
+                              {(() => {
+                                const meetOSAT = data.filter(row => row.osatDifference >= 0).length;
+                                return `${meetOSAT} stores`;
+                              })()}
+                            </Text>
+                          </VStack>
+                        </Box>
+                        
+                        {/* Didn't meet ToF */}
+                        <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
+                          <VStack align="start" spacing={2}>
+                            <HStack spacing={2} align="center">
+                              <Box w="3" h="3" bg="red.500" rounded="full" />
+                              <Text fontSize="sm" fontWeight="semibold" color="red.700">
+                                Didn't meet ToF
+                              </Text>
+                            </HStack>
+                            <Text fontSize="xs" color="red.600">
+                              {(() => {
+                                const didntMeetToF = data.filter(row => row.tofDifference < 0).length;
+                                return `${didntMeetToF} stores`;
+                              })()}
+                            </Text>
+                          </VStack>
+                        </Box>
+                        
+                        {/* Didn't meet OSAT */}
+                        <Box bg="red.50" p={4} rounded="lg" borderWidth="1px" borderColor="red.200">
+                          <VStack align="start" spacing={2}>
+                            <HStack spacing={2} align="center">
+                              <Box w="3" h="3" bg="red.500" rounded="full" />
+                              <Text fontSize="sm" fontWeight="semibold" color="red.700">
+                                Didn't meet OSAT
+                              </Text>
+                            </HStack>
+                            <Text fontSize="xs" color="red.600">
+                              {(() => {
+                                const didntMeetOSAT = data.filter(row => row.osatDifference < 0).length;
+                                return `${didntMeetOSAT} stores`;
+                              })()}
+                            </Text>
+                          </VStack>
+                        </Box>
+                      </Grid>
+                    </Box>
+                    
+                    {/* Key Performance Indicators */}
+                    <Box w="100%" mt={4}>
+                      <Text fontSize="sm" fontWeight="semibold" color="gray.700" mb={3} textAlign="center">
+                        Key Performance Indicators
+                      </Text>
+                      <HStack spacing={4} justify="center" flexWrap="wrap">
+                        <VStack spacing={1} align="center" minW="70px">
+                          <Text fontSize="xs" color="gray.500" textAlign="center">
+                            Best Area
+                          </Text>
+                          <Text fontSize="sm" fontWeight="bold" color="green.600">
+                            {(() => {
+                              const areaPerformance = Object.entries(STORE_AREAS).map(([areaName, storeNumbers]) => {
+                                const areaData = data.filter(row => 
+                                  storeNumbers.includes(String(row.storeNumber).replace(/^0+/, ''))
+                                );
+                                if (areaData.length === 0) return { areaName, avgPerformance: 0 };
+                                
+                                // Calculate average performance across both targets
+                                const totalPerformance = areaData.reduce((sum, row) => {
+                                  const tofPerformance = row.ptdTasteOfFood;
+                                  const osatPerformance = row.ptdOsat;
+                                  return sum + tofPerformance + osatPerformance;
+                                }, 0);
+                                
+                                const avgPerformance = totalPerformance / (areaData.length * 2);
+                                return { areaName, avgPerformance };
+                              });
+                              
+                              const bestArea = areaPerformance.reduce((best, current) => 
+                                current.avgPerformance > best.avgPerformance ? current : best
+                              );
+                              return bestArea.areaName;
+                            })()}
+                          </Text>
+                        </VStack>
+                        
+                        <VStack spacing={1} align="center" minW="70px">
+                          <Text fontSize="xs" color="gray.500" textAlign="center">
+                            Priority Focus
+                          </Text>
+                          <Text fontSize="sm" fontWeight="bold" color="red.600">
+                            {(() => {
+                              const areaPerformance = Object.entries(STORE_AREAS).map(([areaName, storeNumbers]) => {
+                                const areaData = data.filter(row => 
+                                  storeNumbers.includes(String(row.storeNumber).replace(/^0+/, ''))
+                                );
+                                if (areaData.length === 0) return { areaName, avgTargetPercentage: 0 };
+                                
+                                // Calculate percentage of stores meeting each target
+                                const meetToF = areaData.filter(row => row.tofDifference >= 0).length;
+                                const meetOSAT = areaData.filter(row => row.osatDifference >= 0).length;
+                                
+                                const tofPercentage = (meetToF / areaData.length) * 100;
+                                const osatPercentage = (meetOSAT / areaData.length) * 100;
+                                
+                                // Average of the two percentages
+                                const avgTargetPercentage = (tofPercentage + osatPercentage) / 2;
+                                return { areaName, avgTargetPercentage };
+                              });
+                              
+                              const priorityArea = areaPerformance.reduce((best, current) => 
+                                current.avgTargetPercentage < best.avgTargetPercentage ? current : best
+                              );
+                              return priorityArea.areaName;
+                            })()}
+                          </Text>
+                        </VStack>
+                      </HStack>
+                    </Box>
+                  </VStack>
+                </Box>
+              </Box>
+              
+              {/* Summary Table */}
               <Box 
                 overflow="auto" 
                 borderWidth="1px" 
                 borderColor="gray.200"
-                rounded="lg"
+                rounded="xl"
                 shadow="sm"
-                bg="white"
+                bg="gray.50"
                 sx={{
                   '&::-webkit-scrollbar': {
                     height: '8px',
@@ -352,84 +852,76 @@ export default function SMG() {
                   },
                 }}
               >
-                <Table.Root size={{ base: "xs", md: "sm" }} variant="simple">
+                <Table.Root size={{ base: "sm", md: "md" }} variant="simple">
                   <Table.Header>
-                    <Table.Row bg="gray.100" borderBottom="2px" borderColor="gray.300">
+                    <Table.Row bg="white" borderBottom="2px" borderColor="gray.200">
                       <Table.ColumnHeader 
-                        py={{ base: 2, md: 3 }}
-                        px={{ base: 2, md: 4 }}
-                        fontSize={{ base: "xs", md: "sm" }}
-                        fontWeight="bold"
-                        color="gray.800"
-                        textAlign="center"
+                        py={4} 
+                        px={6} 
+                        fontSize="sm" 
+                        fontWeight="bold" 
+                        color="gray.700" 
+                        textAlign="left"
                         borderRight="1px solid"
-                        borderColor="gray.300"
-                        minW={{ base: "60px", md: "80px" }}
+                        borderColor="gray.200"
                       >
                         Area
                       </Table.ColumnHeader>
                       <Table.ColumnHeader 
-                        py={{ base: 2, md: 3 }}
-                        px={{ base: 2, md: 4 }}
-                        fontSize={{ base: "xs", md: "sm" }}
-                        fontWeight="bold"
-                        color="gray.800"
+                        py={4} 
+                        px={6} 
+                        fontSize="sm" 
+                        fontWeight="bold" 
+                        color="gray.700" 
                         textAlign="center"
                         borderRight="1px solid"
-                        borderColor="gray.300"
-                        minW={{ base: "70px", md: "90px" }}
+                        borderColor="gray.200"
                       >
                         Store Count
                       </Table.ColumnHeader>
                       <Table.ColumnHeader 
-                        py={{ base: 2, md: 3 }}
-                        px={{ base: 2, md: 4 }}
-                        fontSize={{ base: "xs", md: "sm" }}
-                        fontWeight="bold"
-                        color="gray.800"
+                        py={4} 
+                        px={6} 
+                        fontSize="sm" 
+                        fontWeight="bold" 
+                        color="gray.700" 
                         textAlign="center"
                         borderRight="1px solid"
-                        borderColor="gray.300"
-                        minW={{ base: "80px", md: "100px" }}
+                        borderColor="gray.200"
                       >
                         Meet ToF Target
                       </Table.ColumnHeader>
                       <Table.ColumnHeader 
-                        py={{ base: 2, md: 3 }}
-                        px={{ base: 2, md: 4 }}
-                        fontSize={{ base: "xs", md: "sm" }}
-                        fontWeight="bold"
-                        color="gray.800"
+                        py={4} 
+                        px={6} 
+                        fontSize="sm" 
+                        fontWeight="bold" 
+                        color="gray.700" 
                         textAlign="center"
                         borderRight="1px solid"
-                        borderColor="gray.300"
-                        minW={{ base: "70px", md: "90px" }}
+                        borderColor="gray.200"
                       >
                         % Meet ToF
                       </Table.ColumnHeader>
                       <Table.ColumnHeader 
-                        py={{ base: 2, md: 3 }}
-                        px={{ base: 2, md: 4 }}
-                        fontSize={{ base: "xs", md: "sm" }}
-                        fontWeight="bold"
-                        color="gray.800"
+                        py={4} 
+                        px={6} 
+                        fontSize="sm" 
+                        fontWeight="bold" 
+                        color="gray.700" 
                         textAlign="center"
                         borderRight="1px solid"
-                        borderColor="gray.300"
-                        minW={{ base: "80px", md: "100px" }}
+                        borderColor="gray.200"
                       >
                         Meet OSAT Target
                       </Table.ColumnHeader>
                       <Table.ColumnHeader 
-                        py={{ base: 2, md: 3 }}
-                        px={{ base: 2, md: 4 }}
-                        fontSize={{ base: "xs", md: "sm" }}
-                        fontWeight="bold"
-                        color="gray.800"
+                        py={4} 
+                        px={6} 
+                        fontSize="sm" 
+                        fontWeight="bold" 
+                        color="gray.700" 
                         textAlign="center"
-                        borderRight="1px solid"
-                        borderColor="gray.300"
-                        minW={{ base: "70px", md: "90px" }}
                       >
                         % Meet OSAT
                       </Table.ColumnHeader>
@@ -489,65 +981,63 @@ export default function SMG() {
                           borderColor="gray.200"
                         >
                           <Table.Cell 
-                            py={{ base: 2, md: 3 }}
-                            px={{ base: 2, md: 4 }}
-                            fontWeight="bold"
-                            textAlign="center"
+                            py={4} 
+                            px={6} 
+                            fontWeight="semibold"
+                            textAlign="left"
                             borderRight="1px solid"
-                            borderColor="gray.300"
-                            fontSize={{ base: "xs", md: "sm" }}
+                            borderColor="gray.200"
+                            color={row.areaName === "Total" ? "gray.800" : "gray.700"}
                           >
                             {row.areaName}
                           </Table.Cell>
                           <Table.Cell 
-                            py={{ base: 2, md: 3 }}
-                            px={{ base: 2, md: 4 }}
+                            py={4} 
+                            px={6} 
                             textAlign="center"
                             borderRight="1px solid"
-                            borderColor="gray.300"
-                            fontSize={{ base: "xs", md: "sm" }}
+                            borderColor="gray.200"
+                            fontWeight="medium"
                           >
                             {row.storeCount}
                           </Table.Cell>
                           <Table.Cell 
-                            py={{ base: 2, md: 3 }}
-                            px={{ base: 2, md: 4 }}
+                            py={4} 
+                            px={6} 
                             textAlign="center"
                             borderRight="1px solid"
-                            borderColor="gray.300"
-                            fontSize={{ base: "xs", md: "sm" }}
+                            borderColor="gray.200"
+                            fontWeight="medium"
                           >
                             {row.meetToF}
                           </Table.Cell>
                           <Table.Cell 
-                            py={{ base: 2, md: 3 }}
-                            px={{ base: 2, md: 4 }}
+                            py={4} 
+                            px={6} 
                             textAlign="center"
                             borderRight="1px solid"
-                            borderColor="gray.300"
+                            borderColor="gray.200"
                             fontWeight="bold"
-                            fontSize={{ base: "xs", md: "sm" }}
+                            color={parseFloat(row.meetToFPercent) >= 75 ? "green.600" : "red.600"}
                           >
                             {row.meetToFPercent}%
                           </Table.Cell>
                           <Table.Cell 
-                            py={{ base: 2, md: 3 }}
-                            px={{ base: 2, md: 4 }}
+                            py={4} 
+                            px={6} 
                             textAlign="center"
                             borderRight="1px solid"
-                            borderColor="gray.300"
-                            fontSize={{ base: "xs", md: "sm" }}
+                            borderColor="gray.200"
+                            fontWeight="medium"
                           >
                             {row.meetOSAT}
                           </Table.Cell>
                           <Table.Cell 
-                            py={{ base: 2, md: 3 }}
-                            px={{ base: 2, md: 4 }}
+                            py={4} 
+                            px={6} 
                             textAlign="center"
-                            borderRight="1px solid"
-                            borderColor="gray.300"
                             fontWeight="bold"
-                            fontSize={{ base: "xs", md: "sm" }}
+                            color={parseFloat(row.meetOSATPercent) >= 75 ? "green.600" : "red.600"}
                           >
                             {row.meetOSATPercent}%
                           </Table.Cell>
@@ -572,44 +1062,299 @@ export default function SMG() {
                 getPerformancePriority(a) - getPerformancePriority(b)
               );
               
+              // Calculate area statistics
+              const meetToF = areaData.filter(row => row.tofDifference >= 0).length;
+              const meetOSAT = areaData.filter(row => row.osatDifference >= 0).length;
+              const meetBoth = areaData.filter(row => row.tofDifference >= 0 && row.osatDifference >= 0).length;
+              const meetNeither = areaData.filter(row => row.tofDifference < 0 && row.osatDifference < 0).length;
+              const meetOne = areaData.length - meetBoth - meetNeither;
+              
               return (
-                <Box key={areaName}>
-                  <Text 
-                    fontSize={{ base: "lg", md: "xl" }} 
-                    fontWeight="bold" 
-                    color="blue.700" 
-                    mb={3}
-                    pl={2}
-                    borderLeft="4px solid"
-                    borderColor="blue.500"
-                  >
-                      {areaName} ({areaData.length} stores)
-                    </Text>
+                <Box key={areaName} mb={8}>
+                  {(() => {
+                    // Calculate area statistics
+                    const meetToF = areaData.filter(row => row.tofDifference >= 0).length;
+                    const meetOSAT = areaData.filter(row => row.osatDifference >= 0).length;
+                    const meetBoth = areaData.filter(row => row.tofDifference >= 0 && row.osatDifference >= 0).length;
+                    const meetNeither = areaData.filter(row => row.tofDifference < 0 && row.osatDifference < 0).length;
+                    const meetOne = areaData.length - meetBoth - meetNeither;
+                    
+                    const tofPercent = areaData.length > 0 ? ((meetToF / areaData.length) * 100).toFixed(1) : "0.0";
+                    const osatPercent = areaData.length > 0 ? ((meetOSAT / areaData.length) * 100).toFixed(1) : "0.0";
+                    
+                    return (
+                      <VStack align="stretch" spacing={4} mb={6}>
+                        {/* Combined Title and Performance Stats Card */}
+                        <Box 
+                          bg="white"
+                          p={4}
+                          rounded="xl"
+                          shadow="md"
+                          borderWidth="1px"
+                          borderColor="blue.200"
+                          position="relative"
+                          overflow="hidden"
+                        >
+                          {/* Background accent */}
+                          <Box
+                            position="absolute"
+                            top="0"
+                            left="0"
+                            right="0"
+                            h="4px"
+                            bgGradient="linear(to-r, blue.400, purple.500)"
+                          />
+                          
+                          {/* Title Section */}
+                          <HStack spacing={3} align="center" mb={4}>
+                            <Box
+                              w="12px"
+                              h="12px"
+                              rounded="full"
+                              bgGradient="linear(to-r, blue.500, purple.600)"
+                              flexShrink={0}
+                            />
+                            <VStack align="start" spacing={1} flex={1}>
+                              <Text
+                                fontSize={{ base: "xl", md: "2xl" }}
+                                fontWeight="800"
+                                color="gray.800"
+                                letterSpacing="tight"
+                              >
+                                {areaName}
+                              </Text>
+                              <Text
+                                fontSize="sm"
+                                color="gray.500"
+                                fontWeight="500"
+                              >
+                                {areaData.length} {areaData.length === 1 ? 'store' : 'stores'}
+                              </Text>
+                            </VStack>
+                            
+                            {/* Performance indicator badge */}
+                            <Box
+                              bg={meetBoth > areaData.length / 2 ? "green.100" : meetNeither > areaData.length / 2 ? "red.100" : "orange.100"}
+                              color={meetBoth > areaData.length / 2 ? "green.700" : meetNeither > areaData.length / 2 ? "red.700" : "orange.700"}
+                              px={3}
+                              py={1}
+                              rounded="full"
+                              fontSize="xs"
+                              fontWeight="bold"
+                              textTransform="uppercase"
+                              letterSpacing="wide"
+                            >
+                              {meetBoth > areaData.length / 2 ? "High" : meetNeither > areaData.length / 2 ? "Low" : "Medium"}
+                            </Box>
+                          </HStack>
+                          
+                          {/* Performance Stats */}
+                          <Box 
+                            bg="gray.50" 
+                            p={4} 
+                            rounded="lg" 
+                            borderWidth="1px" 
+                            borderColor="gray.200"
+                          >
+                            <HStack 
+                              flexWrap="wrap" 
+                              justify="space-between"
+                              align="flex-start"
+                              direction={{ base: "column", md: "row" }}
+                              spacing={{ base: 4, md: 6 }}
+                            >
+                              {/* Overall Performance - Donut Chart */}
+                              <VStack align="center" spacing={3} minW={{ base: "140px", md: "160px" }}>
+                                <Text fontSize="sm" color="gray.700" fontWeight="semibold">
+                                  Overall Performance
+                                </Text>
+                                
+                                {/* Donut Chart */}
+                                <Box position="relative" w="80px" h="80px">
+                                  <svg width="80" height="80" viewBox="0 0 80 80">
+                                    {/* Calculate angles for each segment */}
+                                    {(() => {
+                                      const totalStores = areaData.length;
+                                      const greenAngle = (meetBoth / totalStores) * 360;
+                                      const orangeAngle = (meetOne / totalStores) * 360;
+                                      const redAngle = (meetNeither / totalStores) * 360;
+                                      
+                                      // SVG circle calculations
+                                      const radius = 32;
+                                      const centerX = 40;
+                                      const centerY = 40;
+                                      
+                                      // Helper function to create arc path
+                                      const createArc = (startAngle, endAngle) => {
+                                        const startRad = (startAngle - 90) * Math.PI / 180;
+                                        const endRad = (endAngle - 90) * Math.PI / 180;
+                                        
+                                        const x1 = centerX + radius * Math.cos(startRad);
+                                        const y1 = centerY + radius * Math.sin(startRad);
+                                        const x2 = centerX + radius * Math.cos(endRad);
+                                        const y2 = centerY + radius * Math.sin(endRad);
+                                        
+                                        const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+                                        
+                                        return `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} L ${centerX} ${centerY} Z`;
+                                      };
+                                      
+                                      let currentAngle = 0;
+                                      
+                                      return (
+                                        <>
+                                          {/* Green segment - Both targets met */}
+                                          {meetBoth > 0 && (
+                                            <path
+                                              d={createArc(currentAngle, currentAngle + greenAngle)}
+                                              fill="rgb(74, 222, 128)"
+                                              stroke="none"
+                                            />
+                                          )}
+                                          
+                                          {/* Orange segment - One target met */}
+                                          {meetOne > 0 && (
+                                            <path
+                                              d={createArc(currentAngle + greenAngle, currentAngle + greenAngle + orangeAngle)}
+                                              fill="rgb(251, 146, 60)"
+                                              stroke="none"
+                                            />
+                                          )}
+                                          
+                                          {/* Red segment - Neither target met */}
+                                          {meetNeither > 0 && (
+                                            <path
+                                              d={createArc(currentAngle + greenAngle + orangeAngle, currentAngle + greenAngle + orangeAngle + redAngle)}
+                                              fill="rgb(248, 113, 113)"
+                                              stroke="none"
+                                            />
+                                          )}
+                                        </>
+                                      );
+                                    })()}
+                                    
+                                    {/* Center circle for donut effect */}
+                                    <circle
+                                      cx="40"
+                                      cy="40"
+                                      r="24"
+                                      fill="white"
+                                      stroke="rgb(229, 231, 235)"
+                                      strokeWidth="2"
+                                    />
+                                  </svg>
+                                  
+                                  {/* Center text */}
+                                  <Box
+                                    position="absolute"
+                                    top="50%"
+                                    left="50%"
+                                    transform="translate(-50%, -50%)"
+                                    textAlign="center"
+                                  >
+                                    <Text fontSize="xs" fontWeight="bold" color="gray.700">
+                                      {areaData.length}
+                                    </Text>
+                                    <Text fontSize="xs" color="gray.500">
+                                      total
+                                    </Text>
+                                  </Box>
+                                </Box>
+                                
+                                {/* Legend */}
+                                <VStack spacing={1} align="start">
+                                  <HStack spacing={2}>
+                                    <Box w="3" h="3" bg="green.400" rounded="full" />
+                                    <Text fontSize="xs" color="gray.600">
+                                      {meetBoth} Both ({((meetBoth / areaData.length) * 100).toFixed(0)}%)
+                                    </Text>
+                                  </HStack>
+                                  <HStack spacing={2}>
+                                    <Box w="3" h="3" bg="orange.400" rounded="full" />
+                                    <Text fontSize="xs" color="gray.600">
+                                      {meetOne} One ({((meetOne / areaData.length) * 100).toFixed(0)}%)
+                                    </Text>
+                                  </HStack>
+                                  <HStack spacing={2}>
+                                    <Box w="3" h="3" bg="red.400" rounded="full" />
+                                    <Text fontSize="xs" color="gray.600">
+                                      {meetNeither} None ({((meetNeither / areaData.length) * 100).toFixed(0)}%)
+                                    </Text>
+                                  </HStack>
+                                </VStack>
+                              </VStack>
+                              
+                              {/* ToF Performance */}
+                              <VStack align="center" spacing={2} minW={{ base: "90px", md: "110px" }}>
+                                <Text fontSize="sm" color="gray.700" fontWeight="semibold">
+                                  ToF Target
+                                </Text>
+                                <Text fontSize="xl" fontWeight="bold" color={meetToF > areaData.length / 2 ? "green.600" : "red.600"}>
+                                  {tofPercent}%
+                                </Text>
+                                <Text fontSize="xs" color="gray.500">
+                                  {meetToF}/{areaData.length} stores
+                                </Text>
+                              </VStack>
+                              
+                              {/* OSAT Performance */}
+                              <VStack align="center" spacing={2} minW={{ base: "90px", md: "110px" }}>
+                                <Text fontSize="sm" color="gray.700" fontWeight="semibold">
+                                  OSAT Target
+                                </Text>
+                                <Text fontSize="xl" fontWeight="bold" color={meetOSAT > areaData.length / 2 ? "green.600" : "red.600"}>
+                                  {osatPercent}%
+                                </Text>
+                                <Text fontSize="xs" color="gray.500">
+                                  {meetOSAT}/{areaData.length} stores
+                                </Text>
+                              </VStack>
+                              
+                              {/* Average Performance */}
+                              <VStack align="center" spacing={2} minW={{ base: "90px", md: "110px" }}>
+                                <Text fontSize="sm" color="gray.700" fontWeight="semibold">
+                                  Average
+                                </Text>
+                                <Text fontSize="xl" fontWeight="bold" color="blue.600">
+                                  {(((parseFloat(tofPercent) + parseFloat(osatPercent)) / 2)).toFixed(1)}%
+                                </Text>
+                                <Text fontSize="xs" color="gray.500">
+                                  Combined
+                                </Text>
+                              </VStack>
+                            </HStack>
+                          </Box>
+                        </Box>
+                      </VStack>
+                    );
+                  })()}
+                    
+                    {/* Table Container */}
                     <Box 
-                      overflow="auto" 
-                      borderWidth="1px" 
-                      borderColor="gray.200"
-                      rounded="lg"
-                      shadow="sm"
-                      bg="white"
-                      sx={{
-                        '&::-webkit-scrollbar': {
-                          height: '8px',
-                        },
-                        '&::-webkit-scrollbar-track': {
-                          background: 'gray.100',
-                          borderRadius: '4px',
-                        },
-                        '&::-webkit-scrollbar-thumb': {
-                          background: 'gray.400',
-                          borderRadius: '4px',
-                        },
-                      }}
-                    >
-                      <Table.Root size={{ base: "xs", md: "sm" }} variant="simple">
-                        <Table.Header>
-                          <Table.Row bg="gray.50" borderBottom="2px" borderColor="gray.200">
-                            {smartHeaders.slice(1).map((header, index) => ( // Remove "Area" column
+                    overflow="auto" 
+                    borderWidth="1px" 
+                    borderColor="gray.200"
+                    rounded="lg"
+                    shadow="sm"
+                    bg="white"
+                    sx={{
+                      '&::-webkit-scrollbar': {
+                        height: '8px',
+                      },
+                      '&::-webkit-scrollbar-track': {
+                        background: 'gray.100',
+                        borderRadius: '4px',
+                      },
+                      '&::-webkit-scrollbar-thumb': {
+                        background: 'gray.400',
+                        borderRadius: '4px',
+                      },
+                    }}
+                  >
+                    <Table.Root size={{ base: "xs", md: "sm" }} variant="simple">
+                      <Table.Header>
+                        <Table.Row bg="gray.50" borderBottom="2px" borderColor="gray.200">
+                          {smartHeaders.slice(1).map((header, index) => ( // Remove "Area" column
                               <Table.ColumnHeader 
                                 key={index}
                                 py={{ base: 2, md: 3 }}
@@ -782,196 +1527,7 @@ export default function SMG() {
                 );
             })}
             
-            {/* Region table for stores not in defined areas */}
-            {(() => {
-              const regionData = data.filter(row => {
-                const cleanStoreNumber = String(row.storeNumber).replace(/^0+/, '');
-                return !Object.values(STORE_AREAS).flat().includes(cleanStoreNumber);
-              });
-              
-              if (regionData.length === 0) return null;
-              
-              // Sort by performance: green first, orange second, red last
-              const sortedRegionData = [...regionData].sort((a, b) => 
-                getPerformancePriority(a) - getPerformancePriority(b)
-              );
-              
-              return (
-                <Box>
-                  <Text 
-                    fontSize="xl" 
-                    fontWeight="bold" 
-                    color="purple.700" 
-                    mb={3}
-                    pl={2}
-                    borderLeft="4px solid"
-                    borderColor="purple.500"
-                  >
-                    Region ({regionData.length} stores)
-                  </Text>
-                  <Box 
-                    overflow="auto" 
-                    borderWidth="1px" 
-                    borderColor="gray.200"
-                    rounded="lg"
-                    shadow="sm"
-                    bg="white"
-                  >
-                    <Table.Root size="sm" variant="simple">
-                      <Table.Header>
-                        <Table.Row bg="gray.50" borderBottom="2px" borderColor="gray.200">
-                          {smartHeaders.slice(1).map((header, index) => (
-                            <Table.ColumnHeader 
-                              key={index}
-                              py={3}
-                              px={4}
-                              fontSize="sm"
-                              fontWeight="semibold"
-                              color="gray.700"
-                              textAlign="center"
-                              borderRight={index < smartHeaders.length - 2 ? "1px solid" : "none"}
-                              borderColor="gray.200"
-                            >
-                              {header}
-                            </Table.ColumnHeader>
-                          ))}
-                        </Table.Row>
-                      </Table.Header>
-                      <Table.Body>
-                        {sortedRegionData.map((row, rowIndex) => (
-                          <Table.Row 
-                            key={rowIndex}
-                            _hover={{ bg: "gray.50" }}
-                            borderBottom="1px"
-                            borderColor="gray.100"
-                          >
-                            <Table.Cell 
-                              py={3} 
-                              px={4} 
-                              fontWeight="medium"
-                              textAlign="center"
-                              borderRight="1px solid"
-                              borderColor="gray.200"
-                              bg={(() => {
-                                // Check if store meets both targets
-                                const meetsToF = row.tofDifference >= 0;
-                                const meetsOSAT = row.osatDifference >= 0;
-                                
-                                if (meetsToF && meetsOSAT) {
-                                  return "green.50"; // Both targets met - green
-                                } else if (!meetsToF && !meetsOSAT) {
-                                  return "red.50"; // Neither target met - red
-                                } else {
-                                  return "orange.50"; // At least one target met - orange
-                                }
-                              })()}
-                            >
-                              {row.storeNumber}
-                            </Table.Cell>
-                            <Table.Cell 
-                              py={3} 
-                              px={4} 
-                              fontWeight="medium"
-                              borderRight="1px solid"
-                              borderColor="gray.200"
-                            >
-                              {row.storeName}
-                            </Table.Cell>
-                            <Table.Cell 
-                              py={3} 
-                              px={4} 
-                              textAlign="center"
-                              bg="green.50"
-                              borderRight="1px solid"
-                              borderColor="gray.200"
-                            >
-                              {row.count}
-                            </Table.Cell>
-                            <Table.Cell 
-                              py={3} 
-                              px={4} 
-                              textAlign="center"
-                              borderRight="1px solid"
-                              borderColor="gray.200"
-                            >
-                              {row.ptdTasteOfFood?.toFixed(1) || ""}
-                            </Table.Cell>
-                            <Table.Cell 
-                              py={3} 
-                              px={4} 
-                              textAlign="center"
-                              borderRight="1px solid"
-                              borderColor="gray.200"
-                            >
-                              {row.tofTarget?.toFixed(1) || ""}
-                            </Table.Cell>
-                            <Table.Cell 
-                              py={3} 
-                              px={4} 
-                              textAlign="center"
-                              borderRight="1px solid"
-                              borderColor="gray.200"
-                              {...getDifferenceStyle(row.tofDifference)}
-                            >
-                              {row.tofDifference?.toFixed(1) || ""}
-                            </Table.Cell>
-                            <Table.Cell 
-                              py={3} 
-                              px={4} 
-                              textAlign="center"
-                              borderRight="1px solid"
-                              borderColor="gray.200"
-                              bg={row.tofSurveysNeeded ? "red.50" : ""}
-                            >
-                              {row.tofSurveysNeeded ? row.tofSurveysNeeded : `+${Math.abs(row.tofDifference).toFixed(1)}%`}
-                            </Table.Cell>
-                            <Table.Cell 
-                              py={3} 
-                              px={4} 
-                              textAlign="center"
-                              borderRight="1px solid"
-                              borderColor="gray.200"
-                            >
-                              {row.ptdOsat?.toFixed(1) || ""}
-                            </Table.Cell>
-                            <Table.Cell 
-                              py={3} 
-                              px={4} 
-                              textAlign="center"
-                              borderRight="1px solid"
-                              borderColor="gray.200"
-                            >
-                              {row.osatTarget?.toFixed(1) || ""}
-                            </Table.Cell>
-                            <Table.Cell 
-                              py={3} 
-                              px={4} 
-                              textAlign="center"
-                              borderRight="1px solid"
-                              borderColor="gray.200"
-                              {...getDifferenceStyle(row.osatDifference)}
-                            >
-                              {row.osatDifference?.toFixed(1) || ""}
-                            </Table.Cell>
-                            <Table.Cell 
-                              py={3} 
-                              px={4} 
-                              textAlign="center"
-                              bg="green.200"
-                              fontWeight="medium"
-                              borderRight="1px solid"
-                              borderColor="gray.200"
-                            >
-                              {row.osatSurveysNeeded ? row.osatSurveysNeeded : `+${Math.abs(row.osatDifference).toFixed(1)}%`}
-                            </Table.Cell>
-                          </Table.Row>
-                        ))}
-                      </Table.Body>
-                    </Table.Root>
-                  </Box>
-                </Box>
-              );
-            })()}
+            {/* Area tables completed */}
           </VStack>
         )}
 
