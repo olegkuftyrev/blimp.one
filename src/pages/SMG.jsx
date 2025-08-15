@@ -183,6 +183,15 @@ export default function SMG() {
     ].filter(item => item.value > 0), // Only show segments with data
   });
 
+  // New chart for stores not meeting targets
+  const targetMissChart = useChart({
+    data: [
+      { name: "Meet Both Targets", value: data.filter(row => row.tofDifference >= 0 && row.osatDifference >= 0).length, color: "green.solid" },
+      { name: "Didn't Meet ToF", value: data.filter(row => row.tofDifference < 0).length, color: "red.solid" },
+      { name: "Didn't Meet OSAT", value: data.filter(row => row.osatDifference < 0).length, color: "orange.solid" },
+    ].filter(item => item.value > 0), // Only show segments with data
+  });
+
   async function handleFileUpload(e) {
     setErr("");
     const file = e.target.files?.[0];
@@ -505,40 +514,65 @@ export default function SMG() {
                   {/* Left Column - Gauge Chart and KPIs */}
                   <Box flex="1" minW="300px">
                     <VStack align="center" spacing={4}>
-                      {/* Region Performance Donut Chart */}
-                      <Box position="relative" w="200px" h="200px" mb={10}>
-                        <Text fontSize="sm" color="gray.600" mb={3} textAlign="center">
-                          Region Performance
-                        </Text>
-                        <Box>
-                          <Chart.Root boxSize="200px" chart={regionPerformanceChart} mx="auto">
-                            <PieChart>
-                              <Pie
-                                innerRadius={60}
-                                outerRadius={100}
-                                isAnimationActive={false}
-                                data={regionPerformanceChart.data}
-                                dataKey={regionPerformanceChart.key("value")}
-                                nameKey="name"
-                              >
-                                {regionPerformanceChart.data.map((item) => (
-                                  <Cell key={item.name} fill={regionPerformanceChart.color(item.color)} />
-                                ))}
-                              </Pie>
-                              <Label
-                                content={({ viewBox }) => (
-                                  <Chart.RadialText
-                                    viewBox={viewBox}
-                                    title={data.length}
-                                    description="stores"
+                      {/* Target Miss Chart */}
+                      <Box 
+                        p={6} 
+                        mb={6}
+                      >
+                        <VStack align="center" spacing={4}>
+                          <Box>
+                            <Chart.Root boxSize="200px" chart={targetMissChart} mx="auto">
+                              <PieChart>
+                                <Pie
+                                  innerRadius={60}
+                                  outerRadius={100}
+                                  isAnimationActive={false}
+                                  data={targetMissChart.data}
+                                  dataKey={targetMissChart.key("value")}
+                                  nameKey="name"
+                                >
+                                  {targetMissChart.data.map((item) => (
+                                    <Cell key={item.name} fill={targetMissChart.color(item.color)} />
+                                  ))}
+                                </Pie>
+                                <Label
+                                  content={({ viewBox }) => (
+                                    <Chart.RadialText
+                                      viewBox={viewBox}
+                                      title={data.length}
+                                      description="stores"
+                                    />
+                                  )}
+                                />
+                              </PieChart>
+                            </Chart.Root>
+                          </Box>
+                          
+                          {/* Custom Legend */}
+                          <HStack spacing={6} justify="center">
+                            {targetMissChart.data.map((item, index) => (
+                              <VStack key={item.name} spacing={1} align="center">
+                                <HStack spacing={2}>
+                                  <Box 
+                                    w="3" 
+                                    h="3" 
+                                    bg={targetMissChart.color(item.color)} 
+                                    rounded="full" 
+                                    flexShrink={0}
                                   />
-                                )}
-                              />
-                            </PieChart>
-                          </Chart.Root>
-                        </Box>
+                                  <Text fontSize="sm" fontWeight="semibold" color="gray.700">
+                                    {item.name}
+                                  </Text>
+                                </HStack>
+                                <Text fontSize="xs" color="gray.500">
+                                  {item.value} stores
+                                </Text>
+                              </VStack>
+                            ))}
+                          </HStack>
+                        </VStack>
                       </Box>
-                      
+
                       {/* Key Performance Indicators */}
                      
                     </VStack>
