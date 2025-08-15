@@ -1,6 +1,8 @@
 // src/pages/SMG.jsx
 import React, { useState } from "react";
 import { Box, Text, Input, Table, VStack, HStack, Grid, Button, Tooltip, Flex } from "@chakra-ui/react";
+import { Chart, useChart } from "@chakra-ui/charts";
+import { Cell, Pie, PieChart, Label } from "recharts";
 import * as XLSX from "xlsx";
 
 // Helper functions for calculations
@@ -162,6 +164,24 @@ const getPerformancePriority = (row) => {
 export default function SMG() {
   const [data, setData] = useState([]);
   const [err, setErr] = useState("");
+
+  // Mock chart data for testing Chakra UI Charts
+  const mockChart = useChart({
+    data: [
+      { name: "High Performers", value: 15, color: "green.solid" },
+      { name: "Medium Performers", value: 25, color: "red.solid" },
+      { name: "Low Performers", value: 10, color: "orange.solid" },
+    ],
+  });
+
+  // Real region performance chart data
+  const regionPerformanceChart = useChart({
+    data: [
+      { name: "Both Targets Met", value: data.filter(row => row.tofDifference >= 0 && row.osatDifference >= 0).length, color: "green.solid" },
+      { name: "One Target Met", value: data.filter(row => (row.tofDifference >= 0 && row.osatDifference < 0) || (row.tofDifference < 0 && row.osatDifference >= 0)).length, color: "orange.solid" },
+      { name: "No Targets Met", value: data.filter(row => row.tofDifference < 0 && row.osatDifference < 0).length, color: "red.solid" },
+    ].filter(item => item.value > 0), // Only show segments with data
+  });
 
   async function handleFileUpload(e) {
     setErr("");
@@ -485,68 +505,42 @@ export default function SMG() {
                   {/* Left Column - Gauge Chart and KPIs */}
                   <Box flex="1" minW="300px">
                     <VStack align="center" spacing={4}>
-                      {/* Region Average Gauge */}
-                      <Box position="relative" w="200px" h="200px">
-                        <svg width="200" height="200" viewBox="0 0 200 200">
-                          {/* Background circle */}
-                          <circle
-                            cx="100"
-                            cy="100"
-                            r="80"
-                            fill="none"
-                            stroke="#e2e8f0"
-                            strokeWidth="20"
-                          />
-                          {/* Performance arc */}
-                          <circle
-                            cx="100"
-                            cy="100"
-                            r="80"
-                            fill="none"
-                            stroke="#ef4444"
-                            strokeWidth="20"
-                            strokeDasharray={`${regionAvg * 5.03} 502.65`}
-                            strokeDashoffset="125.66"
-                            transform="rotate(-90 100 100)"
-                          />
-                        </svg>
-                        <Box
-                          position="absolute"
-                          top="50%"
-                          left="50%"
-                          transform="translate(-50%, -50%)"
-                          textAlign="center"
-                        >
-                          <Text fontSize="2xl" fontWeight="bold" color="gray.800">
-                            {regionAvg.toFixed(1)}%
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            Region Avg
-                          </Text>
+                      {/* Region Performance Donut Chart */}
+                      <Box position="relative" w="200px" h="200px" mb={10}>
+                        <Text fontSize="sm" color="gray.600" mb={3} textAlign="center">
+                          Region Performance
+                        </Text>
+                        <Box>
+                          <Chart.Root boxSize="200px" chart={regionPerformanceChart} mx="auto">
+                            <PieChart>
+                              <Pie
+                                innerRadius={60}
+                                outerRadius={100}
+                                isAnimationActive={false}
+                                data={regionPerformanceChart.data}
+                                dataKey={regionPerformanceChart.key("value")}
+                                nameKey="name"
+                              >
+                                {regionPerformanceChart.data.map((item) => (
+                                  <Cell key={item.name} fill={regionPerformanceChart.color(item.color)} />
+                                ))}
+                              </Pie>
+                              <Label
+                                content={({ viewBox }) => (
+                                  <Chart.RadialText
+                                    viewBox={viewBox}
+                                    title={data.length}
+                                    description="stores"
+                                  />
+                                )}
+                              />
+                            </PieChart>
+                          </Chart.Root>
                         </Box>
                       </Box>
                       
                       {/* Key Performance Indicators */}
-                      <HStack spacing={6} justify="center">
-                        <VStack spacing={1} align="center">
-                          <Text fontSize="sm" color="gray.500">Total Stores</Text>
-                          <Text fontSize="lg" fontWeight="bold" color="gray.800">
-                            {data.length}
-                          </Text>
-                        </VStack>
-                        <VStack spacing={1} align="center">
-                          <Text fontSize="sm" color="gray.500">ToF Target</Text>
-                          <Text fontSize="lg" fontWeight="bold" color="red.600">
-                            {regionToF.toFixed(1)}%
-                          </Text>
-                        </VStack>
-                        <VStack spacing={1} align="center">
-                          <Text fontSize="sm" color="gray.500">OSAT Target</Text>
-                          <Text fontSize="lg" fontWeight="bold" color="red.600">
-                            {regionOSAT.toFixed(1)}%
-                          </Text>
-                        </VStack>
-                      </HStack>
+                     
                     </VStack>
                   </Box>
                   
