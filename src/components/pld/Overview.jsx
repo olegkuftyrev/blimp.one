@@ -146,62 +146,47 @@ export default function Knows({ values, rows, actualIdx }) {
 
   // Build metrics array
   const metrics = [
-    // Daypart %
-    ...Object.entries(dayparts).map(([label, val]) => ({
-      label,
-      value: `${val.toFixed(2)}%`,
-      isBusiest: label === busiestLabel,
-    })),
-    { label: "Actual Net Sales", value: `$${netSales.toLocaleString()}` },
-    { label: "Check Average", value: `$${checkAvg.toFixed(2)}` },
-    { label: "Total Transactions", value: `${transactions}` },
-    { label: "OLO %", value: `${oloPercent.toFixed(2)}%` },
     {
-      label: "COGS %",
-      value: `${cogsPercent.toFixed(2)}%`,
-      color: cogsPercent > 30 ? "red.500" : "green.500",
+      label: "Net Sales",
+      value: `Act: $${netSales.toLocaleString()}`,
+      detail: `Pri: $${safe(values["Prior Net Sales"]).toLocaleString()}`,
+      delta: `Δ $${(netSales - safe(values["Prior Net Sales"])).toLocaleString()} (${((netSales - safe(values["Prior Net Sales"])) / safe(values["Prior Net Sales"]) * 100 || 0).toFixed(2)}%)`,
+      color: (netSales - safe(values["Prior Net Sales"])) >= 0 ? "green.500" : "red.500",
+      formula: "(Actual Net Sales - Prior Net Sales) / Prior Net Sales * 100",
     },
     {
-      label: "Labor %",
-      value: `${laborPercent.toFixed(2)}%`,
-      color: laborPercent > 30 ? "red.500" : "green.500",
+      label: "SST%",
+      value: `${((transactions - safe(values["Prior Total Transactions"])) / safe(values["Prior Total Transactions"]) * 100 || 0).toFixed(2)}%`,
+      detail: `This Year: ${transactions.toLocaleString()}`,
+      delta: `Last Year: ${safe(values["Prior Total Transactions"]).toLocaleString()}`,
+      color: ((transactions - safe(values["Prior Total Transactions"])) / safe(values["Prior Total Transactions"]) * 100 || 0) >= 0 ? "green.500" : "red.500",
+      formula: "(This Year Existing Store Transactions – Last Year Existing Store Transactions)/Last Year Existing Store Transactions",
     },
-    { label: "Overtime Hours", value: `${overtimeHrs}` },
-    { label: "Average Hourly Wage", value: `$${hourlyWage.toFixed(2)}` },
-    {
-      label: "Prime Cost",
-      value: `${primeCost.toFixed(2)}%`,
-      color: primeCost > 60 ? "red.500" : "green.500",
+    { 
+      label: "Check Average", 
+      value: `$${checkAvg.toFixed(2)}`,
+      formula: "Net Sales / Total Transactions",
     },
-    {
-      label: "Rent Total",
-      value: `Act: $${rentActual.toLocaleString()}`,
-      detail: `Pri: $${rentPrior.toLocaleString()}`,
-      delta: `Δ $${rentDiff.toLocaleString()} (${rentPctDiff.toFixed(2)}%)`,
-      isRent: true,
+    { 
+      label: "Total Transactions", 
+      value: `${transactions}`,
+      formula: "Total Transactions",
     },
-    {
-      label: "Repairs",
-      value: `Act: $${repairsAct.toLocaleString()}`,
-      detail: `Pri: $${repairsPri.toLocaleString()}`,
-      delta: `Δ $${repairsDiff.toLocaleString()} (${repairsPct.toFixed(2)}%)`,
-      isRepairs: true,
+    { 
+      label: "OLO %", 
+      value: `${oloPercent.toFixed(2)}%`,
+      formula: "(3rd Party + Panda Digital) / Net Sales * 100",
     },
-    {
-      label: "Maintenance",
-      value: `Act: $${maintAct.toLocaleString()}`,
-      detail: `Pri: $${maintPri.toLocaleString()}`,
-      delta: `Δ $${maintDiff.toLocaleString()} (${maintPct.toFixed(2)}%)`,
-      isMaintenance: true,
-    },
+
   ];
 
   // Financial metrics array
   const financialMetrics = [
     {
-      label: "Net Sales (Actual)",
-      value: `$${netSales.toLocaleString()}`,
-      formula: "Net Sales (Actual)",
+      label: "Prime Cost",
+      value: `${primeCost.toFixed(2)}%`,
+      color: primeCost > 60 ? "red.500" : "green.500",
+      formula: "COGS % + Labor %",
     },
     {
       label: "COGS $",
@@ -215,11 +200,6 @@ export default function Knows({ values, rows, actualIdx }) {
       formula: "COGS / Net Sales * 100",
     },
     {
-      label: "Restaurant Contribution",
-      value: `$${((netSales - safe(values["Cost of Goods Sold"]) - safe(values["Total Labor"]) - safe(values["Total Controllables"]) - safe(values["Advertising"] || 0)) - safe(values["Total Fixed Cost"])).toLocaleString()}`,
-      formula: "CP - Fixed Cost",
-    },
-    {
       label: "Cash Flow",
       value: `$${((netSales - safe(values["Cost of Goods Sold"]) - safe(values["Total Labor"]) - safe(values["Total Controllables"]) - safe(values["Advertising"] || 0)) - safe(values["Total Fixed Cost"]) + safe(values["Amortization"]) + safe(values["Depreciation"])).toLocaleString()}`,
       formula: "RC + Amortization + Depreciation",
@@ -229,12 +209,6 @@ export default function Knows({ values, rows, actualIdx }) {
       value: `${((((netSales - safe(values["Cost of Goods Sold"]) - safe(values["Total Labor"]) - safe(values["Total Controllables"]) - safe(values["Advertising"] || 0)) - safe(values["Prior Controllable Profit"])) / (netSales - safe(values["Prior Net Sales"])) * 100) || 0).toFixed(2)}%`,
       color: ((((netSales - safe(values["Cost of Goods Sold"]) - safe(values["Total Labor"]) - safe(values["Total Controllables"]) - safe(values["Advertising"] || 0)) - safe(values["Prior Controllable Profit"])) / (netSales - safe(values["Prior Net Sales"])) * 100) || 0) >= 0 ? "green.500" : "red.500",
       formula: "(CP Actual - CP Prior) / (Net Sales Actual - Net Sales Prior) * 100",
-    },
-    {
-      label: "SSS %",
-      value: `${((netSales - safe(values["Prior Net Sales"])) / safe(values["Prior Net Sales"]) * 100 || 0).toFixed(2)}%`,
-      color: ((netSales - safe(values["Prior Net Sales"])) / safe(values["Prior Net Sales"]) * 100 || 0) >= 0 ? "green.500" : "red.500",
-      formula: "(Actual Net Sales - Prior Net Sales) / Prior Net Sales * 100",
     },
   ];
 
@@ -263,6 +237,35 @@ export default function Knows({ values, rows, actualIdx }) {
       label: "Total Controllables",
       value: `$${safe(values["Total Controllables"]).toLocaleString()}`,
       formula: "Total Controllables",
+    },
+
+  ];
+
+  // Facility metrics array
+  const facilityMetrics = [
+    {
+      label: "Rent Total",
+      value: `Act: $${rentActual.toLocaleString()}`,
+      detail: `Pri: $${rentPrior.toLocaleString()}`,
+      delta: `Δ $${rentDiff.toLocaleString()} (${rentPctDiff.toFixed(2)}%)`,
+      isRent: true,
+      formula: "Rent - MIN + Storage + Percent + Other + Deferred",
+    },
+    {
+      label: "Repairs",
+      value: `Act: $${repairsAct.toLocaleString()}`,
+      detail: `Pri: $${repairsPri.toLocaleString()}`,
+      delta: `Δ $${repairsDiff.toLocaleString()} (${repairsPct.toFixed(2)}%)`,
+      isRepairs: true,
+      formula: "Repairs (Actual vs Prior)",
+    },
+    {
+      label: "Maintenance",
+      value: `Act: $${maintAct.toLocaleString()}`,
+      detail: `Pri: $${maintPri.toLocaleString()}`,
+      delta: `Δ $${maintDiff.toLocaleString()} (${maintPct.toFixed(2)}%)`,
+      isMaintenance: true,
+      formula: "Maintenance (Actual vs Prior)",
     },
   ];
 
@@ -321,229 +324,9 @@ export default function Knows({ values, rows, actualIdx }) {
 
   return (
     <Box width="100%">
-      <Heading size="md" marginBottom={4}>
-        Key Metrics
-      </Heading>
+ 
 
-      {/* spacing={6} добавляет отступ между карточками */}
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4}>
-        {metrics.map(({ label, value, detail, delta, color, isBusiest, formula, isRepairs, isMaintenance, isRent }, i) => (
-          <Box
-            key={i}
-            position="relative"
-            bg="white"
-            borderRadius="md"
-            shadow="sm"
-            border="1px"
-            p={4}
-          >
-            {isBusiest && (
-              <Badge
-                position="absolute"
-                top={2}
-                right={2}
-                colorScheme="blackAlpha"
-              >
-                Busiest Time
-              </Badge>
-            )}
-            {isRepairs || isMaintenance || isRent ? (
-              <Stat.Root>
-                <Stat.Label fontSize="sm" color="gray.500">
-                  {label}
-                </Stat.Label>
-                <HStack>
-                  <Stat.ValueText fontWeight="bold" color={color || "inherit"} fontSize="xl">
-                    {value}
-                  </Stat.ValueText>
-                  <Badge colorPalette={isRepairs ? (repairsDiff >= 0 ? "red" : "green") : isMaintenance ? (maintDiff >= 0 ? "red" : "green") : (rentDiff >= 0 ? "red" : "green")} gap="0">
-                    {isRepairs ? (repairsDiff >= 0 ? <Stat.UpIndicator /> : <Stat.DownIndicator />) : isMaintenance ? (maintDiff >= 0 ? <Stat.UpIndicator /> : <Stat.DownIndicator />) : (rentDiff >= 0 ? <Stat.UpIndicator /> : <Stat.DownIndicator />)}
-                    {Math.abs(isRepairs ? repairsPct : isMaintenance ? maintPct : rentPctDiff).toFixed(2)}%
-                  </Badge>
-                </HStack>
-                {detail && (
-                  <Stat.HelpText fontSize="xs" color="gray.500" mb="0">
-                    {detail}
-                  </Stat.HelpText>
-                )}
-                {delta && (
-                  <Stat.HelpText fontSize="xs" color="gray.700" mb="0">
-                    {delta}
-                  </Stat.HelpText>
-                )}
-                {formula && (
-                  <Stat.HelpText fontSize="xs" color="gray.400" mb="0">
-                    {formula}
-                  </Stat.HelpText>
-                )}
-              </Stat.Root>
-            ) : (
-              <VStack align="start" spacing={1}>
-                <Text fontSize="sm" color="gray.500">
-                  {label}
-                </Text>
-                <Text fontWeight="bold" color={color || "inherit"} fontSize="xl">
-                  {value}
-                </Text>
-                {detail && (
-                  <Text fontSize="xs" color="gray.500">
-                    {detail}
-                  </Text>
-                )}
-                {delta && (
-                  <Text fontSize="xs" color="gray.700">
-                    {delta}
-                  </Text>
-                )}
-                {formula && (
-                  <Text fontSize="xs" color="gray.400">
-                    {formula}
-                  </Text>
-                )}
-              </VStack>
-            )}
-          </Box>
-        ))}
-      </SimpleGrid>
-
-      <Heading size="md" marginTop={8} marginBottom={4}>
-        Controllable Profit Metrics
-      </Heading>
-
-      {/* spacing={6} добавляет отступ между карточками */}
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4}>
-        {cpMetrics.map(({ label, value, detail, delta, color, isBusiest, formula, isCP }, i) => (
-          <Box
-            key={i}
-            position="relative"
-            bg="white"
-            borderRadius="md"
-            shadow="sm"
-            border="1px"
-            p={4}
-          >
-            {isBusiest && (
-              <Badge
-                position="absolute"
-                top={2}
-                right={2}
-                colorScheme="blackAlpha"
-              >
-                Busiest Time
-              </Badge>
-            )}
-            {isCP ? (
-              <Stat.Root>
-                <Stat.Label fontSize="sm" color="gray.500">
-                  {label}
-                </Stat.Label>
-                <HStack>
-                  <Stat.ValueText fontWeight="bold" color={color || "inherit"} fontSize="xl">
-                    {value}
-                  </Stat.ValueText>
-                  <Badge colorPalette={(netSales - safe(values["Cost of Goods Sold"]) - safe(values["Total Labor"]) - safe(values["Total Controllables"]) - safe(values["Advertising"] || 0) - safe(values["Prior Controllable Profit"])) >= 0 ? "green" : "red"} gap="0">
-                    {(netSales - safe(values["Cost of Goods Sold"]) - safe(values["Total Labor"]) - safe(values["Total Controllables"]) - safe(values["Advertising"] || 0) - safe(values["Prior Controllable Profit"])) >= 0 ? <Stat.UpIndicator /> : <Stat.DownIndicator />}
-                    {Math.abs(safe(values["Prior Controllable Profit"]) ? (((netSales - safe(values["Cost of Goods Sold"]) - safe(values["Total Labor"]) - safe(values["Total Controllables"]) - safe(values["Advertising"] || 0)) - safe(values["Prior Controllable Profit"])) / safe(values["Prior Controllable Profit"]) * 100) : 0).toFixed(2)}%
-                  </Badge>
-                </HStack>
-                {detail && (
-                  <Stat.HelpText fontSize="xs" color="gray.500" mb="0">
-                    {detail}
-                  </Stat.HelpText>
-                )}
-                {delta && (
-                  <Stat.HelpText fontSize="xs" color="gray.700" mb="0">
-                    {delta}
-                  </Stat.HelpText>
-                )}
-                {formula && (
-                  <Stat.HelpText fontSize="xs" color="gray.400" mb="0">
-                    {formula}
-                  </Stat.HelpText>
-                )}
-              </Stat.Root>
-            ) : (
-              <VStack align="start" spacing={1}>
-                <Text fontSize="sm" color="gray.500">
-                  {label}
-                </Text>
-                <Text fontWeight="bold" color={color || "inherit"} fontSize="xl">
-                  {value}
-                </Text>
-                {detail && (
-                  <Text fontSize="xs" color="gray.500">
-                    {detail}
-                  </Text>
-                )}
-                {delta && (
-                  <Text fontSize="xs" color="gray.700">
-                    {delta}
-                  </Text>
-                )}
-                {formula && (
-                  <Text fontSize="xs" color="gray.400">
-                    {formula}
-                  </Text>
-                )}
-              </VStack>
-            )}
-          </Box>
-        ))}
-      </SimpleGrid>
-
-      <Heading size="md" marginTop={8} marginBottom={4}>
-        Labor Metrics
-      </Heading>
-
-      {/* spacing={6} добавляет отступ между карточками */}
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4}>
-        {laborMetrics.map(({ label, value, detail, delta, color, isBusiest, formula }, i) => (
-          <Box
-            key={i}
-            position="relative"
-            bg="white"
-            borderRadius="md"
-            shadow="sm"
-            border="1px"
-            p={4}
-          >
-            {isBusiest && (
-              <Badge
-                position="absolute"
-                top={2}
-                right={2}
-                colorScheme="blackAlpha"
-              >
-                Busiest Time
-              </Badge>
-            )}
-            <VStack align="start" spacing={1}>
-              <Text fontSize="sm" color="gray.500">
-                {label}
-              </Text>
-              <Text fontWeight="bold" color={color || "inherit"} fontSize="xl">
-                {value}
-              </Text>
-              {detail && (
-                <Text fontSize="xs" color="gray.500">
-                  {detail}
-                </Text>
-              )}
-              {delta && (
-                <Text fontSize="xs" color="gray.700">
-                  {delta}
-                </Text>
-              )}
-              {formula && (
-                <Text fontSize="xs" color="gray.400">
-                  {formula}
-                </Text>
-              )}
-            </VStack>
-          </Box>
-        ))}
-      </SimpleGrid>
-
+     
       {/* Alternative DataList view for Labor Metrics */}
       <Flex 
         direction={{ base: "column", lg: "row" }}
@@ -551,13 +334,13 @@ export default function Knows({ values, rows, actualIdx }) {
         flexWrap="wrap"
         justify="space-between"
       >
-        {/* Labor Metrics DataList Card */}
+
+
+        {/* Key Metrics DataList Card */}
         <Box
           bg="white"
           borderRadius="xl"
           shadow="md"
-          borderWidth="1px"
-          borderColor="blue.200"
           p={6}
           position="relative"
           overflow="hidden"
@@ -565,48 +348,61 @@ export default function Knows({ values, rows, actualIdx }) {
           minW={{ base: "100%", lg: "300px" }}
           maxW={{ base: "100%", lg: "calc(33.333% - 12px)" }}
         >
-          {/* Blue accent bar at top */}
-          <Box
-            position="absolute"
-            top="0"
-            left="0"
-            right="0"
-            height="4px"
-            bgGradient="linear(to-r, blue.400, blue.600)"
-          />
           
-          <Heading size="md" marginBottom={4} color="blue.600">
-            Labor Metrics (DataList View)
+          <Heading size="md" marginBottom={4}>
+            Sales
           </Heading>
           
-          <Box bg="gray.50" borderRadius="lg" borderWidth="1px" borderColor="gray.200" p={4}>
-            <DataList.Root>
-              {laborMetrics.map(({ label, value, detail, delta, color, formula }, i) => (
-                <DataList.Item key={i}>
-                  <DataList.ItemLabel fontSize="sm" color="gray.500">
+          <Box p={4}>
+            <VStack spacing={6} align="stretch" divideY="2px">
+              {metrics.map(({ label, value, detail, delta, color, isBusiest, formula }, i) => (
+                <Stat.Root key={i} p={3}>
+                  <Stat.Label fontSize="sm" color="gray.500">
                     {label}
-                  </DataList.ItemLabel>
-                  <DataList.ItemValue fontWeight="bold" color={color || "inherit"} fontSize="xl">
+                  </Stat.Label>
+                  <Stat.ValueText fontWeight="bold" color={color || "inherit"} fontSize="xl">
                     {value}
-                  </DataList.ItemValue>
+                  </Stat.ValueText>
+                  {detail && (
+                    <Text fontSize="xs" color="gray.500" mt="1">
+                      {detail}
+                    </Text>
+                  )}
+                  {delta && (
+                    <HStack spacing={2} mt="1">
+                      <Text fontSize="xs" color="gray.700">
+                        {delta}
+                      </Text>
+                      {delta.includes('Δ') && (
+                        <Badge colorPalette={delta.includes('-') ? "red" : "green"} variant="plain" px="0">
+                          {delta.includes('-') ? <Stat.DownIndicator /> : <Stat.UpIndicator />}
+                        </Badge>
+                      )}
+                    </HStack>
+                  )}
                   {formula && (
                     <Text fontSize="xs" color="gray.400" mt="1">
                       {formula}
                     </Text>
                   )}
-                </DataList.Item>
+                  {isBusiest && (
+                    <Badge colorScheme="orange" size="sm" mt="1">
+                      Busiest Time
+                    </Badge>
+                  )}
+                </Stat.Root>
               ))}
-            </DataList.Root>
+            </VStack>
           </Box>
         </Box>
+
+
 
         {/* Financial Metrics DataList Card */}
         <Box
           bg="white"
           borderRadius="xl"
           shadow="md"
-          borderWidth="1px"
-          borderColor="green.200"
           p={6}
           position="relative"
           overflow="hidden"
@@ -614,38 +410,43 @@ export default function Knows({ values, rows, actualIdx }) {
           minW={{ base: "100%", lg: "300px" }}
           maxW={{ base: "100%", lg: "calc(33.333% - 12px)" }}
         >
-          {/* Green accent bar at top */}
-          <Box
-            position="absolute"
-            top="0"
-            right="0"
-            left="0"
-            height="4px"
-            bgGradient="linear(to-r, green.400, green.600)"
-          />
-          
-          <Heading size="md" marginBottom={4} color="green.600">
-            Financial Metrics (DataList View)
+          <Heading size="md" marginBottom={4}>
+            Financials
           </Heading>
           
-          <Box bg="gray.50" borderRadius="lg" borderWidth="1px" borderColor="gray.200" p={4}>
-            <DataList.Root>
-              {financialMetrics.map(({ label, value, detail, delta, color, formula }, i) => (
-                <DataList.Item key={i}>
-                  <DataList.ItemLabel fontSize="sm" color="gray.500">
+          <Box p={4}>
+            <VStack spacing={6} align="stretch" divideY="2px">
+              {financialMetrics.map(({ label, value, detail, delta, color, formula, isBusiest }, i) => (
+                <Stat.Root key={i} p={3}>
+                  <Stat.Label fontSize="sm" color="gray.500">
                     {label}
-                  </DataList.ItemLabel>
-                  <DataList.ItemValue fontWeight="bold" color={color || "inherit"} fontSize="xl">
+                  </Stat.Label>
+                  <Stat.ValueText fontWeight="bold" color={color || "inherit"} fontSize="xl">
                     {value}
-                  </DataList.ItemValue>
+                  </Stat.ValueText>
+                  {detail && (
+                    <Text fontSize="xs" color="gray.500" mt="1">
+                      {detail}
+                    </Text>
+                  )}
+                  {delta && (
+                    <Text fontSize="xs" color="gray.700" mt="1">
+                      {delta}
+                    </Text>
+                  )}
+                  {isBusiest && (
+                    <Badge colorScheme="orange" size="sm" mt="1">
+                      Busiest Time
+                    </Badge>
+                  )}
                   {formula && (
                     <Text fontSize="xs" color="gray.400" mt="1">
                       {formula}
                     </Text>
                   )}
-                </DataList.Item>
+                </Stat.Root>
               ))}
-            </DataList.Root>
+            </VStack>
           </Box>
         </Box>
 
@@ -654,8 +455,6 @@ export default function Knows({ values, rows, actualIdx }) {
           bg="white"
           borderRadius="xl"
           shadow="md"
-          borderWidth="1px"
-          borderColor="purple.200"
           p={6}
           position="relative"
           overflow="hidden"
@@ -663,41 +462,167 @@ export default function Knows({ values, rows, actualIdx }) {
           minW={{ base: "100%", lg: "300px" }}
           maxW={{ base: "100%", lg: "calc(33.333% - 12px)" }}
         >
-          {/* Purple accent bar at top */}
-          <Box
-            position="absolute"
-            top="0"
-            right="0"
-            left="0"
-            height="4px"
-            bgGradient="linear(to-r, purple.400, purple.600)"
-          />
-          
-          <Heading size="md" marginBottom={4} color="purple.600">
-            Controllable Profit Metrics (DataList View)
+          <Heading size="md" marginBottom={4}>
+            CP & RC
           </Heading>
           
-          <Box bg="gray.50" borderRadius="lg" borderWidth="1px" borderColor="gray.200" p={4}>
-            <DataList.Root>
-              {cpMetrics.map(({ label, value, detail, delta, color, formula }, i) => (
-                <DataList.Item key={i}>
-                  <DataList.ItemLabel fontSize="sm" color="gray.500">
+          {/* First box - Main CP metrics */}
+          <Box p={4}>
+            <VStack spacing={6} align="stretch" divideY="2px">
+              {cpMetrics.map(({ label, value, detail, delta, color, formula, isCP }, i) => (
+                <Stat.Root key={i} p={3}>
+                  <Stat.Label fontSize="sm" color="gray.500">
                     {label}
-                  </DataList.ItemLabel>
-                  <DataList.ItemValue fontWeight="bold" color={color || "inherit"} fontSize="xl">
+                  </Stat.Label>
+                  <Stat.ValueText fontWeight="bold" color={color || "inherit"} fontSize="xl">
                     {value}
-                  </DataList.ItemValue>
+                  </Stat.ValueText>
+                  {detail && (
+                    <Text fontSize="xs" color="gray.500" mt="1">
+                      {detail}
+                    </Text>
+                  )}
+                  {delta && (
+                    <Text fontSize="xs" color="gray.700" mt="1">
+                      {delta}
+                    </Text>
+                  )}
                   {formula && (
                     <Text fontSize="xs" color="gray.400" mt="1">
                       {formula}
                     </Text>
                   )}
-                </DataList.Item>
+                </Stat.Root>
               ))}
-            </DataList.Root>
+            </VStack>
+          </Box>
+          
+          {/* Second box - Restaurant Contribution */}
+          <Box p={4} mt={4}>
+            <VStack spacing={6} align="stretch" divideY="2px">
+              <Stat.Root p={3}>
+                <Stat.Label fontSize="sm" color="gray.500">
+                  Restaurant Contribution
+                </Stat.Label>
+                <Stat.ValueText fontWeight="bold" fontSize="xl">
+                  ${((netSales - safe(values["Cost of Goods Sold"]) - safe(values["Total Labor"]) - safe(values["Total Controllables"]) - safe(values["Advertising"] || 0)) - safe(values["Total Fixed Cost"])).toLocaleString()}
+                </Stat.ValueText>
+                <Text fontSize="xs" color="gray.400" mt="1">
+                  CP - Fixed Cost
+                </Text>
+              </Stat.Root>
+              <Stat.Root p={3}>
+                <Stat.Label fontSize="sm" color="gray.500">
+                  Restaurant Contribution %
+                </Stat.Label>
+                <Stat.ValueText fontWeight="bold" fontSize="xl">
+                  ${(((netSales - safe(values["Cost of Goods Sold"]) - safe(values["Total Labor"]) - safe(values["Total Controllables"]) - safe(values["Advertising"] || 0)) - safe(values["Total Fixed Cost"])) / netSales * 100).toFixed(2)}%
+                </Stat.ValueText>
+                <Text fontSize="xs" color="gray.400" mt="1">
+                  RC / Net Sales * 100
+                </Text>
+              </Stat.Root>
+            </VStack>
+          </Box>
+        </Box>
+
+
+
+        {/* Facility Metrics DataList Card */}
+        <Box
+          bg="white"
+          borderRadius="xl"
+          shadow="md"
+          p={6}
+          position="relative"
+          overflow="hidden"
+          flex={{ base: "1", lg: "1" }}
+          minW={{ base: "100%", lg: "300px" }}
+          maxW={{ base: "100%", lg: "calc(33.333% - 12px)" }}
+        >
+          <Heading size="md" marginBottom={4}>
+            Facility
+          </Heading>
+          
+          <Box p={4}>
+            <VStack spacing={6} align="stretch" divideY="2px">
+              {facilityMetrics.map(({ label, value, detail, delta, color, formula, isRent, isRepairs, isMaintenance }, i) => (
+                <Stat.Root key={i} p={3}>
+                  <Stat.Label fontSize="sm" color="gray.500">
+                    {label}
+                  </Stat.Label>
+                  <Stat.ValueText fontWeight="bold" color={color || "inherit"} fontSize="xl">
+                    {value}
+                  </Stat.ValueText>
+                  {detail && (
+                    <Text fontSize="xs" color="gray.500" mt="1">
+                      {detail}
+                    </Text>
+                  )}
+                  {delta && (
+                    <Text fontSize="xs" color="gray.700" mt="1">
+                      {delta}
+                    </Text>
+                  )}
+                  {formula && (
+                    <Text fontSize="xs" color="gray.400" mt="1">
+                      {formula}
+                    </Text>
+                  )}
+                </Stat.Root>
+              ))}
+            </VStack>
           </Box>
         </Box>
       </Flex>
+      
+      {/* Labor Metrics as full-width card below */}
+      <Box
+        bg="white"
+        borderRadius="xl"
+        shadow="md"
+        borderWidth="1px"
+        borderColor="blue.200"
+        p={6}
+        position="relative"
+        overflow="hidden"
+        mt={6}
+        width="100%"
+      >
+        {/* Blue accent bar at top */}
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          height="4px"
+          bgGradient="linear(to-r, blue.400, blue.600)"
+        />
+        
+        <Heading size="md" marginBottom={4} color="blue.600">
+          Labor Metrics (DataList View)
+        </Heading>
+        
+        <Box p={4}>
+          <SimpleGrid columns={4} gap={4}>
+            {laborMetrics.map(({ label, value, detail, delta, color, formula }, i) => (
+              <Box key={i} textAlign="left">
+                <Text fontSize="sm" color="gray.500" mb={2}>
+                  {label}
+                </Text>
+                <Text fontWeight="bold" color={color || "inherit"} fontSize="xl" mb={1}>
+                  {value}
+                </Text>
+                {formula && (
+                  <Text fontSize="xs" color="gray.400">
+                    {formula}
+                  </Text>
+                )}
+              </Box>
+            ))}
+          </SimpleGrid>
+        </Box>
+      </Box>
     </Box>
   );
 }
