@@ -8,6 +8,7 @@ import {
   Stack,
   Button,
   HStack,
+  Progress,
 } from "@chakra-ui/react";
 import { useAppStore } from "../../store/useAppStore.js";
 import { roles } from "../../data/roles.js";
@@ -42,6 +43,24 @@ export default function CompetencyQuestions() {
   // Check if all questions in a competency are answered
   const isCompAnswered = (comp) =>
     comp.questions.every((q) => answers[`${comp.id}-${q.id}`] !== undefined);
+
+  // Calculate progress for a specific competency
+  const getCompetencyProgress = (comp) => {
+    const totalQuestions = comp.questions.length;
+    const answeredQuestions = comp.questions.filter(q => 
+      answers[`${comp.id}-${q.id}`] !== undefined
+    ).length;
+    return totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
+  };
+
+  // Calculate overall progress across all competencies
+  const getOverallProgress = () => {
+    if (competencies.length === 0) return 0;
+    
+    const totalQuestions = competencies.reduce((sum, comp) => sum + comp.questions.length, 0);
+    const answeredQuestions = Object.keys(answers).length;
+    return totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
+  };
 
   // Handle answer selection
   const handleAnswer = (compId, qId, value) => {
@@ -81,12 +100,30 @@ export default function CompetencyQuestions() {
           Competency Questions
         </Heading>
 
+        {/* Overall Progress Bar */}
+        <Box mb={6} p={4} bg="white" rounded="md" shadow="sm">
+          <Flex justify="space-between" align="center" mb={2}>
+            <Text fontWeight="medium" color="gray.700">
+              Overall Progress
+            </Text>
+            <Text fontSize="sm" color="gray.500">
+              {Math.round(getOverallProgress())}% Complete
+            </Text>
+          </Flex>
+          <Progress.Root value={getOverallProgress()} size="sm" colorScheme="blue">
+            <Progress.Track>
+              <Progress.Range />
+            </Progress.Track>
+          </Progress.Root>
+        </Box>
+
         {role ? (
           <Stack spacing={8}>
             {competencies.map((comp, index) => {
               const prevAnswered =
                 index === 0 || isCompAnswered(competencies[index - 1]);
               const disabledCard = !prevAnswered;
+              const progress = getCompetencyProgress(comp);
 
               return (
                 <Box
@@ -98,9 +135,18 @@ export default function CompetencyQuestions() {
                   opacity={disabledCard ? 0.6 : 1}
                   pointerEvents={disabledCard ? "none" : "auto"}
                 >
-                  <Text fontWeight="bold" fontSize="lg" mb={4}>
-                    {comp.label} (Score: {scores[comp.id] ?? 0})
-                  </Text>
+                  <Flex justify="space-between" align="center" mb={4}>
+                    <Text fontWeight="bold" fontSize="lg">
+                      {comp.label}
+                    </Text>
+                    <Box w="120px">
+                      <Progress.Root value={progress} size="sm" colorScheme="teal">
+                        <Progress.Track>
+                          <Progress.Range />
+                        </Progress.Track>
+                      </Progress.Root>
+                    </Box>
+                  </Flex>
 
                   {prevAnswered ? (
                     <Stack spacing={0} divideY="1px" divideColor="gray.200">
@@ -141,16 +187,16 @@ export default function CompetencyQuestions() {
               );
             })}
 
-                        {competencies.every(isCompAnswered) && (
-                            <ActionNav
-                                open={true}
-                                showBack={true}
-                                showNext={true}
-                                onBack={() => navigate("/idp")}
-                                onNext={handleSubmit}
-                                isNextDisabled={false}
-                            />
-                            )}
+            {competencies.every(isCompAnswered) && (
+              <ActionNav
+                open={true}
+                showBack={true}
+                showNext={true}
+                onBack={() => navigate("/idp")}
+                onNext={handleSubmit}
+                isNextDisabled={false}
+              />
+            )}
           </Stack>
         ) : (
           <Text textAlign="center" color="red.500">
