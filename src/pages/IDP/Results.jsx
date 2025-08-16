@@ -164,7 +164,7 @@ export default function Results() {
                       {/* Description: Suggested action */}
                       {comp.actions[qIndex] && (
                         <Text fontSize="sm" color="gray.600" ml={2}>
-                          <strong>Suggested Action:</strong> {comp.actions[qIndex].action}
+                      {comp.actions[qIndex].action}
                         </Text>
                       )}
                     </Box>
