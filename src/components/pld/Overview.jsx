@@ -43,23 +43,19 @@ export default function Overview({ values, rows, actualIdx }) {
 
   return (
     <Box width="100%">
-      {/* Top Row - 4 Simple Cards */}
-      <Flex 
-        direction={{ base: "column", lg: "row" }}
-        gap={6}
+            {/* Top Row - 2 Cards using CSS Grid */}
+      <Box
+        display="grid"
+        gridTemplateColumns={{ base: "1fr", lg: "1fr 3fr" }}
+        gap={{ base: 4, lg: 6 }}
         mb={8}
-        flexWrap="wrap"
-        justify="space-between"
       >
-        {/* Card 1 */}
+        {/* Card 1 - Net Sales */}
         <Box
           bg="white"
           borderRadius="xl"
           shadow="md"
           p={6}
-          flex={{ base: "1", lg: "1" }}
-          minW={{ base: "100%", lg: "200px" }}
-          maxW={{ base: "100%", lg: "calc(25% - 18px)" }}
         >
           <Flex justify="space-between" align="center" mb={3}>
             <Heading size="md">
@@ -111,27 +107,26 @@ export default function Overview({ values, rows, actualIdx }) {
               </PieChart>
             </Chart.Root>
           </Box>
-          
-
         </Box>
 
-        {/* Combined Cards 2, 3, 4 */}
+        {/* Card 2 - Combined Sales Metrics using nested Grid */}
         <Box
           bg="white"
           borderRadius="xl"
           shadow="md"
           p={6}
-          flex={{ base: "1", lg: "3" }}
-          minW={{ base: "100%", lg: "calc(75% - 12px)" }}
-          maxW={{ base: "100%", lg: "calc(75% - 12px)" }}
         >
-          <Flex direction={{ base: "column", lg: "row" }} gap={6} justify="space-between">
-            {/* Section 2 - Net Sales Only */}
-            <Box flex="1">
+          <Box
+            display="grid"
+            gridTemplateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }}
+            gap={{ base: 4, lg: 6 }}
+          >
+            {/* Column 1 - Sales Overview */}
+            <Box>
               <Heading size="md" mb={3}>
                 Sales Overview
               </Heading>
-              <VStack spacing={4} align="stretch" divideY="1px">
+              <VStack spacing={{ base: 3, lg: 4 }} align="stretch" divideY="1px">
                 {salesMetrics.filter(metric => metric.label === "Net Sales").map(({ label, value, detail, delta, color, formula }, i) => (
                   <Stat.Root key={i} p={2}>
                     <Stat.Label fontSize="xs" color="gray.500">
@@ -167,12 +162,12 @@ export default function Overview({ values, rows, actualIdx }) {
               </VStack>
             </Box>
             
-            {/* Section 3 - SST Only */}
-            <Box flex="1">
+            {/* Column 2 - Transactions */}
+            <Box>
               <Heading size="md" mb={3}>
-              Transactions
+                Transactions
               </Heading>
-              <VStack spacing={4} align="stretch" divideY="1px">
+              <VStack spacing={{ base: 3, lg: 4 }} align="stretch" divideY="1px">
                 {salesMetrics.filter(metric => metric.label === "SST%").map(({ label, value, detail, delta, color, formula }, i) => (
                   <Stat.Root key={i} p={2}>
                     <Stat.Label fontSize="xs" color="gray.500">
@@ -208,12 +203,12 @@ export default function Overview({ values, rows, actualIdx }) {
               </VStack>
             </Box>
             
-            {/* Section 4 - Check Average & OLO% */}
-            <Box flex="1">
+            {/* Column 3 - Check Average */}
+            <Box>
               <Heading size="md" mb={3}>
                 Check Average
               </Heading>
-              <VStack spacing={4} align="stretch" divideY="1px">
+              <VStack spacing={{ base: 3, lg: 4 }} align="stretch" divideY="1px">
                 {salesMetrics.filter(metric => ["Check Average", "OLO %"].includes(metric.label)).map(({ label, value, detail, delta, color, formula }, i) => (
                   <Stat.Root key={i} p={2}>
                     <Stat.Label fontSize="xs" color="gray.500">
@@ -248,9 +243,9 @@ export default function Overview({ values, rows, actualIdx }) {
                 ))}
               </VStack>
             </Box>
-          </Flex>
+          </Box>
         </Box>
-      </Flex>
+      </Box>
 
       {/* Alternative DataList view for Labor Metrics */}
       <Flex 
