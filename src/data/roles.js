@@ -576,4 +576,25 @@ export const roles = [
     getSkill("209"),
   ].filter(Boolean),
   },
+    {
+    label: "aco",
+    title: "ACO",
+    description: "Owns full P&L, leads staff, ensures brand standards.",
+    competencies: [
+      getComp("customerFocus"),
+      getComp("decisionQuality"),
+      getComp("ensuresAccountability"),
+      getComp("valuesDifferences"),
+      getComp('integrityTrust'),
+      getComp('actionOriented'),
+      getComp('communicatesEffectively'),
+      getComp('businessInsight'),
+      getComp('attractsDevelopsTalent'),
+      getComp('beingResilient'),
+    ].filter(Boolean),
+    // Added "inventoryCounting" as a random cook skill
+    skills: [
+    getSkill("1"),
+  ].filter(Boolean),
+  },
 ];
