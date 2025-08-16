@@ -89,7 +89,7 @@ export default function JobTitleStep() {
         </Text>
         {selectedColumn === col && <Badge colorScheme="blue">Selected</Badge>}
       </Flex>
-      <Box flex="1">
+      <Box flex="1" display="flex" flexDirection="column" justifyContent="flex-end">
         {blocks.map(({ color, items }, idx) => (
           <Box key={idx} mt={idx === 0 ? 0 : 3} p={3} bg={color} rounded="md">
             <Stack spacing={1}>
