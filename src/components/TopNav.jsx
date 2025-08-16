@@ -47,8 +47,17 @@ export default function TopNav() {
           to="/pl"
           variant={location.pathname === "/pl" ? "solid" : "ghost"}
           size="sm"
+          mr={2}
         >
-          PL
+          P&L
+        </Button>
+        <Button
+          as={RouterLink}
+          to="/smg"
+          variant={location.pathname === "/smg" ? "solid" : "ghost"}
+          size="sm"
+        >
+          SMG
         </Button>
       </Box>
     </Flex>
