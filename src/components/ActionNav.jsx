@@ -33,8 +33,7 @@ export default function ActionNav({
                 variant="surface"
                 size="lg"
                 onClick={onNext}
-                 colorPalette="teal"
-                 isDisabled={isNextDisabled}
+                isDisabled={isNextDisabled}
               >
                 {nextLabel}
               </Button>
